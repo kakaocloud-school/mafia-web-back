@@ -1,4 +1,4 @@
-package com.gg.mafia.domain.member.model;
+package com.gg.mafia.domain.model;
 
 import java.util.Collections;
 import java.util.Map;
