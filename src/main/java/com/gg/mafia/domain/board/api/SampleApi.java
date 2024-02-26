@@ -1,6 +1,5 @@
 package com.gg.mafia.domain.board.api;
 
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.domain.board.application.SampleService;
 import com.gg.mafia.domain.board.dto.SampleCreateRequest;
 import com.gg.mafia.domain.board.dto.SampleResponse;
@@ -8,6 +7,7 @@ import com.gg.mafia.domain.board.dto.SampleSearchRequest;
 import com.gg.mafia.domain.board.dto.SampleUpdateRequest;
 import com.gg.mafia.global.common.request.SearchFilter;
 import com.gg.mafia.global.common.response.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

@@ -1,11 +1,11 @@
 package com.gg.mafia.global.config.db;
 
+import com.gg.mafia.global.util.Util;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.AllArgsConstructor;
 import org.apache.commons.dbcp.BasicDataSource;
-import com.gg.mafia.global.util.Util;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;

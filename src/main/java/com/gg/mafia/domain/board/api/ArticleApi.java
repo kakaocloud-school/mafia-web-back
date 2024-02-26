@@ -1,9 +1,9 @@
 package com.gg.mafia.domain.board.api;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.domain.board.application.ArticleService;
 import com.gg.mafia.global.common.response.ApiResponse;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,5 +1,6 @@
 package com.gg.mafia.domain.member.domain;
 
+import com.gg.mafia.domain.model.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -12,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.gg.mafia.domain.model.BaseEntity;
 
 @Getter
 @Entity

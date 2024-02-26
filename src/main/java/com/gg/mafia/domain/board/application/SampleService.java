@@ -1,8 +1,5 @@
 package com.gg.mafia.domain.board.application;
 
-import jakarta.persistence.EntityNotFoundException;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.domain.board.dao.SampleDao;
 import com.gg.mafia.domain.board.domain.Sample;
 import com.gg.mafia.domain.board.dto.SampleCreateRequest;
@@ -11,6 +8,9 @@ import com.gg.mafia.domain.board.dto.SampleResponse;
 import com.gg.mafia.domain.board.dto.SampleSearchRequest;
 import com.gg.mafia.domain.board.dto.SampleUpdateRequest;
 import com.gg.mafia.global.common.request.SearchFilter;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

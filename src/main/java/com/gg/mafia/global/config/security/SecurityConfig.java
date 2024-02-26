@@ -1,7 +1,7 @@
 package com.gg.mafia.global.config.security;
 
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.global.config.filter.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
