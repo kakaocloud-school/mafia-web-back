@@ -13,8 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.gg.mafia.domain.member.model.RoleEnum;
-import com.gg.mafia.domain.member.model.RoleEnumConverter;
+import com.gg.mafia.domain.model.RoleEnum;
+import com.gg.mafia.domain.model.RoleEnumConverter;
 import com.gg.mafia.domain.model.BaseEntity;
 
 @Getter

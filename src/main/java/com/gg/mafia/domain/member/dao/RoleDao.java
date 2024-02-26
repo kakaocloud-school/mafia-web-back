@@ -2,7 +2,7 @@ package com.gg.mafia.domain.member.dao;
 
 import java.util.Optional;
 import com.gg.mafia.domain.member.domain.Role;
-import com.gg.mafia.domain.member.model.RoleEnum;
+import com.gg.mafia.domain.model.RoleEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
