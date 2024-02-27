@@ -1,10 +1,10 @@
 package com.gg.mafia.global.config.db;
 
-import java.util.Arrays;
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.domain.member.dao.RoleDao;
 import com.gg.mafia.domain.member.domain.Role;
 import com.gg.mafia.domain.model.RoleEnum;
+import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;

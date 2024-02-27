@@ -1,8 +1,8 @@
 package com.gg.mafia.domain.member.dto;
 
-import java.util.List;
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.member.domain.UserToRole;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

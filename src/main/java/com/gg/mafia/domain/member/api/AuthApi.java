@@ -1,10 +1,10 @@
 package com.gg.mafia.domain.member.api;
 
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.domain.member.application.AuthService;
 import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
 import com.gg.mafia.global.common.response.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,9 +1,9 @@
 package com.gg.mafia.domain.board.dao;
 
-import java.util.Optional;
 import com.gg.mafia.domain.board.domain.Sample;
 import com.gg.mafia.domain.board.dto.SampleSearchRequest;
 import com.gg.mafia.global.common.request.SearchFilter;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

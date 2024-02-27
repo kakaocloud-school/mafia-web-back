@@ -1,10 +1,10 @@
 package com.gg.mafia.global.error;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import jakarta.persistence.EntityNotFoundException;
-import java.util.stream.Collectors;
 import com.gg.mafia.domain.member.exception.LoginFailedException;
 import com.gg.mafia.global.common.response.ApiResponse;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

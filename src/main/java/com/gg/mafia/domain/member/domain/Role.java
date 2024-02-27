@@ -1,5 +1,8 @@
 package com.gg.mafia.domain.member.domain;
 
+import com.gg.mafia.domain.model.BaseEntity;
+import com.gg.mafia.domain.model.RoleEnum;
+import com.gg.mafia.domain.model.RoleEnumConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -13,9 +16,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.gg.mafia.domain.model.RoleEnum;
-import com.gg.mafia.domain.model.RoleEnumConverter;
-import com.gg.mafia.domain.model.BaseEntity;
 
 @Getter
 @Setter

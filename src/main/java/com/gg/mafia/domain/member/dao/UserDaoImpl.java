@@ -1,10 +1,10 @@
 package com.gg.mafia.domain.member.dao;
 
+import com.gg.mafia.domain.member.domain.QUser;
+import com.gg.mafia.domain.member.domain.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import com.gg.mafia.domain.member.domain.QUser;
-import com.gg.mafia.domain.member.domain.User;
 
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDaoCustom {

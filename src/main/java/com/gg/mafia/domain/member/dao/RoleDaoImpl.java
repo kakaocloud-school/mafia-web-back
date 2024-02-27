@@ -1,11 +1,11 @@
 package com.gg.mafia.domain.member.dao;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import com.gg.mafia.domain.member.domain.QRole;
 import com.gg.mafia.domain.member.domain.Role;
 import com.gg.mafia.domain.model.RoleEnum;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RoleDaoImpl implements RoleDaoCustom {
