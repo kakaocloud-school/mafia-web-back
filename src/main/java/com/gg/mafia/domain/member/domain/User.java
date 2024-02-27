@@ -1,5 +1,7 @@
 package com.gg.mafia.domain.member.domain;
 
+import com.gg.mafia.domain.achievement.domain.UserAchievement;
+import com.gg.mafia.domain.model.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.gg.mafia.domain.model.BaseEntity;
 
 @Getter
 @Setter
@@ -27,7 +28,13 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserToRole> userToRoles = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,
+            CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<UserAchievement> userAchievements = new ArrayList<>();
 }
