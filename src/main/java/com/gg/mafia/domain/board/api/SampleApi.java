@@ -7,6 +7,7 @@ import com.gg.mafia.domain.board.dto.SampleSearchRequest;
 import com.gg.mafia.domain.board.dto.SampleUpdateRequest;
 import com.gg.mafia.global.common.request.SearchFilter;
 import com.gg.mafia.global.common.response.ApiResponse;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,8 +50,8 @@ public class SampleApi {
 
     @PostMapping
     public ResponseEntity<Void> save(@Validated @RequestBody SampleCreateRequest request) {
-        sampleService.save(request);
-        return ResponseEntity.ok().build();
+        Long id = sampleService.save(request);
+        return ResponseEntity.created(URI.create("/board/samples/" + id)).build();
     }
 
     @PatchMapping("/{id}")
@@ -63,12 +64,12 @@ public class SampleApi {
             SampleUpdateRequest request
     ) {
         sampleService.update(id, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         sampleService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
