@@ -28,6 +28,7 @@ public class Role extends BaseEntity {
     @Convert(converter = RoleEnumConverter.class)
     private RoleEnum value;
 
+    @Builder.Default
     @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserToRole> userToRoles = new ArrayList<>();
