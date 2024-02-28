@@ -40,3 +40,6 @@ bin/
 
 # 설정 파일
 *.properties
+
+# generated 폴더
+**/generated
