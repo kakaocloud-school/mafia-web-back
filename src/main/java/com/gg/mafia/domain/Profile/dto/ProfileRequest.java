@@ -7,4 +7,6 @@ import lombok.Data;
 public class ProfileRequest {
     @NotBlank
     private String userId;
+    private String description;
+    private int rating;
 }
