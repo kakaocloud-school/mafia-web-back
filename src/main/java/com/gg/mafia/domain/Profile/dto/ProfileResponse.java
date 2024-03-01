@@ -10,6 +10,6 @@ import lombok.Data;
 public class ProfileResponse {
     private String description;
     private int rating;
-    private Long Id;
+    private Long id;
     private String user_id;
 }
