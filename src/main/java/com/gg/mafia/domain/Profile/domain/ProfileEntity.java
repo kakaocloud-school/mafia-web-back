@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +25,9 @@ public class ProfileEntity extends BaseEntity {
     private String description;
     @Column(nullable = false)
     private int rating;
-    @ManyToOne
+    @OneToOne
     //profile의 외래키열의 이름은 user_id 참조하는 열은 id라 생각해서 작성
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     @Column(nullable = false)
     private User user;
 }
