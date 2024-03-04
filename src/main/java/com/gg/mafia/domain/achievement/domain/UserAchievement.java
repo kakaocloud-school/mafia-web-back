@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -36,6 +35,11 @@ public class UserAchievement extends BaseEntity {
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Achievement achievement;
+
+    public UserAchievement(User user, Achievement achievement) {
+        this.user = user;
+        this.achievement = achievement;
+    }
 
     public static UserAchievement relate(User user, Achievement achievement) {
         UserAchievement userAchievement = new UserAchievement();

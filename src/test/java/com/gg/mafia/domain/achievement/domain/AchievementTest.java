@@ -42,9 +42,9 @@ public class AchievementTest {
     @DisplayName("UserAchievement를 저장하면 User와 Achivement가 저장된다.")
     public void saveCascade() {
         UserAchievement userAchievement = UserAchievement.builder()
+                .user(createUser())
                 .achievement(createAchievement())
                 .build();
-        userAchievement.setUser(createUser());
         em.persist(userAchievement);
         em.flush();
         String userJpql = String.format("select u from User u where u.email = 'TEST_USER'");
