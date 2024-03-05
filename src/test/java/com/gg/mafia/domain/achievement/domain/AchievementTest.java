@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnit;
+import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -87,8 +88,10 @@ public class AchievementTest {
     }
 
     public Achievement createAchievement() {
+        Random rnd = new Random();
         return Achievement.builder()
                 .name("TEST_ACHIEVEMENT")
+                .step(rnd.nextInt(4) + 1)
                 .build();
     }
 }

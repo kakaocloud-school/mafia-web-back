@@ -16,4 +16,6 @@ import lombok.NoArgsConstructor;
 public class Achievement extends BaseEntity {
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private Integer step;
 }
