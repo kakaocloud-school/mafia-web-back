@@ -4,6 +4,7 @@ import com.gg.mafia.domain.achievement.domain.Achievement;
 import com.gg.mafia.domain.achievement.domain.AchievementStep;
 import com.gg.mafia.domain.achievement.domain.UserAchievement;
 import com.gg.mafia.domain.member.domain.User;
+import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,8 +65,10 @@ class UserAchievementDaoTest {
     }
 
     public Achievement createAchievement() {
+        Random rnd = new Random();
         return Achievement.builder()
                 .name("TEST_ACHIEVEMENT")
+                .step(rnd.nextInt(4) + 1)
                 .build();
     }
 

@@ -3,6 +3,7 @@ package com.gg.mafia.domain.member.domain;
 import com.gg.mafia.domain.achievement.domain.AchievementStep;
 import com.gg.mafia.domain.achievement.domain.UserAchievement;
 import com.gg.mafia.domain.model.BaseEntity;
+import com.gg.mafia.domain.record.domain.GameParticipation;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -44,6 +45,10 @@ public class User extends BaseEntity {
     private List<UserAchievement> userAchievements = new ArrayList<>();
 
     @OneToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "achievementStep_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private AchievementStep achievementStep;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<GameParticipation> gameParticipations = new ArrayList<>();
 }
