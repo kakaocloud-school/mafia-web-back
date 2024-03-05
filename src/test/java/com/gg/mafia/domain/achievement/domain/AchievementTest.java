@@ -72,9 +72,17 @@ public class AchievementTest {
 
 
     public User createUser() {
+        AchievementStep achievementStep = AchievementStep.builder()
+                .commonAchieveStep(1)
+                .mafiaAchieveStep(1)
+                .citizenAchieveStep(1)
+                .policeAchieveStep(1)
+                .doctorAchieveStep(1)
+                .build();
         return User.builder()
                 .email("TEST_USER")
                 .password("123")
+                .achievementStep(achievementStep)
                 .build();
     }
 

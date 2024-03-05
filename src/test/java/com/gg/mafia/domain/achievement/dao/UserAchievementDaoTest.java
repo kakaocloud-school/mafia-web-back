@@ -1,6 +1,7 @@
 package com.gg.mafia.domain.achievement.dao;
 
 import com.gg.mafia.domain.achievement.domain.Achievement;
+import com.gg.mafia.domain.achievement.domain.AchievementStep;
 import com.gg.mafia.domain.achievement.domain.UserAchievement;
 import com.gg.mafia.domain.member.domain.User;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,7 @@ class UserAchievementDaoTest {
         return User.builder()
                 .email("TEST_USER")
                 .password("123")
+                .achievementStep(AchievementStep.create())
                 .build();
     }
 
