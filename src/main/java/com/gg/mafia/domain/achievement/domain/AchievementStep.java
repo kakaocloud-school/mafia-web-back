@@ -17,19 +17,41 @@ import lombok.NoArgsConstructor;
 public class AchievementStep extends BaseEntity {
     @OneToOne(mappedBy = "achievementStep")
     private User user;
-    private Integer commonAchieveStep;
-    private Integer mafiaAchieveStep;
-    private Integer citizenAchieveStep;
-    private Integer policeAchieveStep;
-    private Integer doctorAchieveStep;
+    @Builder.Default
+    private Integer commonAchieveStep = 1;
+    @Builder.Default
+    private Integer mafiaAchieveStep = 1;
+    @Builder.Default
+    private Integer citizenAchieveStep = 1;
+    @Builder.Default
+    private Integer policeAchieveStep = 1;
+    @Builder.Default
+    private Integer doctorAchieveStep = 1;
 
     public static AchievementStep create() {
         return AchievementStep.builder()
-                .commonAchieveStep(1)
-                .mafiaAchieveStep(1)
-                .citizenAchieveStep(1)
-                .policeAchieveStep(1)
-                .doctorAchieveStep(1)
                 .build();
+    }
+
+    public void increase(String achieveName) {
+        switch (achieveName) {
+            case "common":
+                this.commonAchieveStep++;
+                return;
+            case "mafia":
+                this.mafiaAchieveStep++;
+                return;
+            case "citizen":
+                this.citizenAchieveStep++;
+                return;
+            case "police":
+                this.policeAchieveStep++;
+                return;
+            case "doctor":
+                this.doctorAchieveStep++;
+                return;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 }
