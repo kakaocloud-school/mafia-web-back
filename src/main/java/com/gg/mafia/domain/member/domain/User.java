@@ -2,6 +2,7 @@ package com.gg.mafia.domain.member.domain;
 
 import com.gg.mafia.domain.achievement.domain.UserAchievement;
 import com.gg.mafia.domain.model.BaseEntity;
+import com.gg.mafia.domain.record.domain.GameParticipation;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,4 +38,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserAchievement> userAchievements = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<GameParticipation> gameParticipations = new ArrayList<>();
 }
