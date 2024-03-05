@@ -11,5 +11,5 @@ public class ProfileResponse {
     private String description;
     private int rating;
     private Long id;
-    private String userId;
+    private Long userId;
 }

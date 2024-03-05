@@ -28,6 +28,5 @@ public class ProfileEntity extends BaseEntity {
     @OneToOne
     //profile의 외래키열의 이름은 user_id 참조하는 열은 id라 생각해서 작성
     @JoinColumn(name = "userId", referencedColumnName = "id")
-    @Column(nullable = false)
     private User user;
 }

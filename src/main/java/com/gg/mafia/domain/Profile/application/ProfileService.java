@@ -5,14 +5,10 @@ import com.gg.mafia.domain.Profile.domain.ProfileEntity;
 import com.gg.mafia.domain.Profile.dto.ProfileMapper;
 import com.gg.mafia.domain.Profile.dto.ProfileRequest;
 import com.gg.mafia.domain.Profile.dto.ProfileResponse;
-import com.gg.mafia.domain.board.domain.Sample;
-import com.gg.mafia.domain.board.dto.SampleCreateRequest;
-import com.gg.mafia.domain.board.dto.SampleUpdateRequest;
 import com.gg.mafia.domain.member.domain.User;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +18,9 @@ public class ProfileService {
     private final ProfileDao profileDao;
     private final ProfileMapper profileMapper;
 
-    public ProfileResponse getByUserId(User user) {
-        ProfileEntity profile = findByUser(user);
+    public ProfileResponse getByUserId(Long id) {
+
+        ProfileEntity profile = findById(id);
         return profileMapper.toProfileResponse(profile);
 
     }
@@ -35,10 +32,9 @@ public class ProfileService {
     public void descriptionUpdate(ProfileRequest request) {
         profileDao.save(profileMapper.toEntity(request));
     }
-}
 
-    private ProfileEntity findByUser(User user) {
-        Optional<ProfileEntity> OProfileEntity = profileDao.findByUser(user);
+    private ProfileEntity findById(Long id) {
+        Optional<ProfileEntity> OProfileEntity = profileDao.findById(id);
         if (OProfileEntity.isPresent()) {
             return OProfileEntity.get();
         } else {
