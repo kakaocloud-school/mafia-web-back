@@ -2,7 +2,11 @@ package com.gg.mafia.domain.achievement.domain;
 
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.model.BaseEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AchievementStep extends BaseEntity {
-    @OneToOne(mappedBy = "achievementStep")
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
     @Builder.Default
     private Integer commonAchieveStep = 1;
