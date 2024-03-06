@@ -82,11 +82,6 @@ public class AchievementTest {
                 .build();
         AchievementStep.builder()
                 .user(user)
-                .commonAchieveStep(1)
-                .mafiaAchieveStep(1)
-                .citizenAchieveStep(1)
-                .policeAchieveStep(1)
-                .doctorAchieveStep(1)
                 .build();
         return user;
     }

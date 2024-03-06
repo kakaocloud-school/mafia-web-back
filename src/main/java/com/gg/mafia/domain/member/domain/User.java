@@ -12,7 +12,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,9 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
@@ -31,12 +28,10 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserToRole> userToRoles = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserAchievement> userAchievements = new ArrayList<>();
@@ -45,7 +40,12 @@ public class User extends BaseEntity {
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private AchievementStep achievementStep;
 
-    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<GameParticipation> gameParticipations = new ArrayList<>();
+
+    @Builder
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

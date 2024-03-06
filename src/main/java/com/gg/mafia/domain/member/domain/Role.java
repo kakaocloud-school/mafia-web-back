@@ -11,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,16 +19,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Role extends BaseEntity {
     @Column(unique = true)
     @Convert(converter = RoleEnumConverter.class)
     private RoleEnum value;
 
-    @Builder.Default
     @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserToRole> userToRoles = new ArrayList<>();
+
+    @Builder
+    public Role(RoleEnum value) {
+        this.value = value;
+    }
 }
