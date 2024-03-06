@@ -6,11 +6,8 @@ import com.gg.mafia.domain.model.BaseEntity;
 import com.gg.mafia.domain.record.domain.GameParticipation;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
@@ -44,8 +41,8 @@ public class User extends BaseEntity {
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserAchievement> userAchievements = new ArrayList<>();
 
-    @OneToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST,
+            CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private AchievementStep achievementStep;
 
     @Builder.Default
