@@ -1,6 +1,9 @@
 package com.gg.mafia.domain.achievement.domain;
 
 import com.gg.mafia.domain.member.domain.User;
+import com.gg.mafia.global.config.AppConfig;
+import com.gg.mafia.global.config.auditing.AuditingConfig;
+import com.gg.mafia.global.config.db.TestDbConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -16,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(value = "file:src/main/webapp/WEB-INF/root-context.xml")
+@ContextConfiguration(classes = {AppConfig.class, TestDbConfig.class, AuditingConfig.class})
 @Slf4j
 public class AchievementStepTest {
     @PersistenceUnit
@@ -41,7 +44,8 @@ public class AchievementStepTest {
     @Test
     @DisplayName("AchievementStep 저장를 저장한다. ")
     public void createAchievementStep_Test() {
-        AchievementStep achievementStep = AchievementStep.create();
+        User user = createUser("TEST_USER", "123");
+        AchievementStep achievementStep = AchievementStep.create(user);
         em.persist(achievementStep);
         em.flush();
         AchievementStep findAchievementStep = em.find(AchievementStep.class, achievementStep.getId());
@@ -51,19 +55,18 @@ public class AchievementStepTest {
     @Test
     @DisplayName("User를 저장하면 AchievementStep도 함께 저장된다.")
     public void saveCascade_AchievementStep_Test() {
-        AchievementStep achievementStep = AchievementStep.create();
-        User user = createUser("TEST_USER", "123", achievementStep);
+        User user = createUser("TEST_USER", "123");
+        AchievementStep achievementStep = AchievementStep.create(user);
         em.persist(user);
         em.flush();
         User findUser = em.find(User.class, user.getId());
         Assertions.assertThat(findUser.getAchievementStep()).isEqualTo(achievementStep);
     }
 
-    public User createUser(String email, String pw, AchievementStep achievementStep) {
+    public User createUser(String email, String pw) {
         return User.builder()
                 .email(email)
                 .password(pw)
-                .achievementStep(achievementStep)
                 .build();
     }
 }
