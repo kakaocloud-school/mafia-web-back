@@ -23,7 +23,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
 @Table(
         uniqueConstraints = {
@@ -46,15 +45,14 @@ public class GameParticipation extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Game game;
 
-    @Builder.Default
     @OneToMany(mappedBy = "gameParticipation", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<RoundAction> roundActions = new ArrayList<>();
 
-    public GameParticipation(JobEnum job, Boolean survival, User user, Game game, List<RoundAction> roundActions) {
+    @Builder
+    public GameParticipation(JobEnum job, Boolean survival, User user, Game game) {
         this.job = job;
         this.survival = survival;
-        this.roundActions = roundActions;
         setUser(user);
         setGame(game);
     }

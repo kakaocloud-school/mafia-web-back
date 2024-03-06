@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Builder
 @NoArgsConstructor
 @Table(
         uniqueConstraints = {
@@ -33,6 +32,7 @@ public class UserToRole extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Role role;
 
+    @Builder
     public UserToRole(User user, Role role) {
         setUser(user);
         setRole(role);
