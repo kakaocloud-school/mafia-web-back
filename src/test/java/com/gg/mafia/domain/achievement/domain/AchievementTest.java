@@ -1,6 +1,9 @@
 package com.gg.mafia.domain.achievement.domain;
 
 import com.gg.mafia.domain.member.domain.User;
+import com.gg.mafia.global.config.AppConfig;
+import com.gg.mafia.global.config.auditing.AuditingConfig;
+import com.gg.mafia.global.config.db.TestDbConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -17,7 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(value = "file:src/main/webapp/WEB-INF/root-context.xml")
+@ContextConfiguration(classes = {AppConfig.class, TestDbConfig.class, AuditingConfig.class})
 @Slf4j
 public class AchievementTest {
     @PersistenceUnit
@@ -73,18 +76,19 @@ public class AchievementTest {
 
 
     public User createUser() {
-        AchievementStep achievementStep = AchievementStep.builder()
+        User user = User.builder()
+                .email("TEST_USER")
+                .password("123")
+                .build();
+        AchievementStep.builder()
+                .user(user)
                 .commonAchieveStep(1)
                 .mafiaAchieveStep(1)
                 .citizenAchieveStep(1)
                 .policeAchieveStep(1)
                 .doctorAchieveStep(1)
                 .build();
-        return User.builder()
-                .email("TEST_USER")
-                .password("123")
-                .achievementStep(achievementStep)
-                .build();
+        return user;
     }
 
     public Achievement createAchievement() {

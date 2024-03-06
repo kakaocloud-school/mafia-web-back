@@ -4,6 +4,9 @@ import com.gg.mafia.domain.achievement.domain.Achievement;
 import com.gg.mafia.domain.achievement.domain.AchievementStep;
 import com.gg.mafia.domain.achievement.domain.UserAchievement;
 import com.gg.mafia.domain.member.domain.User;
+import com.gg.mafia.global.config.AppConfig;
+import com.gg.mafia.global.config.auditing.AuditingConfig;
+import com.gg.mafia.global.config.db.TestDbConfig;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -17,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(value = "file:src/main/webapp/WEB-INF/root-context.xml")
+@ContextConfiguration(classes = {AppConfig.class, TestDbConfig.class, AuditingConfig.class})
 @Transactional
 @Slf4j
 class UserAchievementDaoTest {
@@ -57,11 +60,12 @@ class UserAchievementDaoTest {
     }
 
     public User createUser() {
-        return User.builder()
+        User user = User.builder()
                 .email("TEST_USER")
                 .password("123")
-                .achievementStep(AchievementStep.create())
                 .build();
+        AchievementStep.create(user);
+        return user;
     }
 
     public Achievement createAchievement() {

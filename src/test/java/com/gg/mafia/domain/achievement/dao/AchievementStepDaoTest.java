@@ -1,6 +1,10 @@
 package com.gg.mafia.domain.achievement.dao;
 
 import com.gg.mafia.domain.achievement.domain.AchievementStep;
+import com.gg.mafia.domain.member.domain.User;
+import com.gg.mafia.global.config.AppConfig;
+import com.gg.mafia.global.config.auditing.AuditingConfig;
+import com.gg.mafia.global.config.db.TestDbConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(value = "file:src/main/webapp/WEB-INF/root-context.xml")
+@ContextConfiguration(classes = {AppConfig.class, TestDbConfig.class, AuditingConfig.class})
 @Transactional
 @Slf4j
 public class AchievementStepDaoTest {
@@ -24,15 +28,19 @@ public class AchievementStepDaoTest {
 
     @BeforeEach
     public void setUp() {
-        origin = AchievementStep.create();
+        User user = User.builder()
+                .email("aaaa@gmail.com")
+                .password("test123")
+                .build();
+        origin = AchievementStep.create(user);
         dao.save(origin);
     }
 
     @Test
     @DisplayName("findById 값으로 받은 객체의 id값을 비교한다.")
     public void findById_Test() {
-        AchievementStep find = dao.findById(origin.getId()).get();
-        Assertions.assertThat(find.getId()).isEqualTo(origin.getId());
+        AchievementStep find = dao.findById(origin.getId()).orElseGet(() -> null);
+        Assertions.assertThat(find).isEqualTo(origin);
     }
 
     @Test
