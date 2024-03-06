@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Builder
 @NoArgsConstructor
 @Table(
         uniqueConstraints = {
@@ -35,16 +34,17 @@ public class UserAchievement extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Achievement achievement;
 
+    @Builder
     public UserAchievement(User user, Achievement achievement) {
-        this.user = user;
+        setUser(user);
         this.achievement = achievement;
     }
 
     public static UserAchievement relate(User user, Achievement achievement) {
-        UserAchievement userAchievement = new UserAchievement();
-        userAchievement.setUser(user);
-        userAchievement.setAchievement(achievement);
-        return userAchievement;
+        return UserAchievement.builder()
+                .user(user)
+                .achievement(achievement)
+                .build();
     }
 
     public void setUser(User user) {
@@ -53,9 +53,5 @@ public class UserAchievement extends BaseEntity {
         }
         this.user = user;
         this.user.getUserAchievements().add(this);
-    }
-
-    public void setAchievement(Achievement achievement) {
-        this.achievement = achievement;
     }
 }

@@ -18,7 +18,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
 @Table(
         uniqueConstraints = {
@@ -49,6 +48,7 @@ public class RoundAction extends BaseEntity {
     private User actionTarget;
 
 
+    @Builder
     public RoundAction(Integer round, GameParticipation gameParticipation, boolean survival, User firstVote,
                        User secondVote, User actionTarget) {
         this.round = round;

@@ -14,33 +14,26 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Builder
 @NoArgsConstructor
 public class AchievementStep extends BaseEntity {
     @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
-    @Builder.Default
+
     private Integer commonAchieveStep = 1;
-    @Builder.Default
+
     private Integer mafiaAchieveStep = 1;
-    @Builder.Default
+
     private Integer citizenAchieveStep = 1;
-    @Builder.Default
+
     private Integer policeAchieveStep = 1;
-    @Builder.Default
+
     private Integer doctorAchieveStep = 1;
 
-    public AchievementStep(User user, Integer commonAchieveStep, Integer mafiaAchieveStep, Integer citizenAchieveStep,
-                           Integer policeAchieveStep, Integer doctorAchieveStep) {
-        this.commonAchieveStep = commonAchieveStep;
-        this.mafiaAchieveStep = mafiaAchieveStep;
-        this.citizenAchieveStep = citizenAchieveStep;
-        this.policeAchieveStep = policeAchieveStep;
-        this.doctorAchieveStep = doctorAchieveStep;
+    @Builder
+    public AchievementStep(User user) {
         setUser(user);
     }
-
 
     public static AchievementStep create(User user) {
         return AchievementStep.builder()
