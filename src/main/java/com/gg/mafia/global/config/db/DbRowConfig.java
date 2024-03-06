@@ -2,10 +2,10 @@ package com.gg.mafia.global.config.db;
 
 import com.gg.mafia.domain.achievement.dao.AchievementDao;
 import com.gg.mafia.domain.achievement.domain.Achievement;
+import com.gg.mafia.domain.achievement.domain.AchievementEnum;
 import com.gg.mafia.domain.member.dao.RoleDao;
 import com.gg.mafia.domain.member.domain.Role;
 import com.gg.mafia.domain.model.RoleEnum;
-import com.gg.mafia.domain.model.achievement.AchievementEnum;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
@@ -43,8 +43,8 @@ public class DbRowConfig implements InitializingBean {
     private void insertAchievement(AchievementEnum value) {
         if (achievementDao.findByValue(value).isEmpty()) {
             trySave(achievementDao, Achievement.builder()
-                    .value(value)
-
+                    .achievementName(value)
+                    .jobName(value.getJobEnum())
                     .build());
         }
     }

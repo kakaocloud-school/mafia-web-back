@@ -9,7 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {AppConfig.class, TestDbConfig.class, AuditingConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 @Transactional
 @Slf4j
 public class AchievementStepDaoTest {

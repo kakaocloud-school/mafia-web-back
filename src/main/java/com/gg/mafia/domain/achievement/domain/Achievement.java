@@ -1,8 +1,8 @@
 package com.gg.mafia.domain.achievement.domain;
 
 import com.gg.mafia.domain.model.BaseEntity;
-import com.gg.mafia.domain.model.achievement.AchievementConverter;
-import com.gg.mafia.domain.model.achievement.AchievementEnum;
+import com.gg.mafia.domain.record.domain.JobEnum;
+import com.gg.mafia.domain.record.domain.JobEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -19,5 +19,7 @@ import lombok.NoArgsConstructor;
 public class Achievement extends BaseEntity {
     @Column(unique = true)
     @Convert(converter = AchievementConverter.class)
-    private AchievementEnum value;
+    private AchievementEnum achievementName;
+    @Convert(converter = JobEnumConverter.class)
+    private JobEnum jobName;
 }
