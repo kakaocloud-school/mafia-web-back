@@ -2,13 +2,14 @@ package com.gg.mafia.domain.member.application;
 
 import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
-import com.gg.mafia.domain.member.dto.UserMapper;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,9 @@ public class MailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private int authCode;
-    private UserMapper userMapper;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+    private String authCode;
 
     public void makeEmailAuthCode() {
         Random rnd = new Random();
@@ -29,7 +31,7 @@ public class MailService {
             randomNumber += Integer.toString(rnd.nextInt(10));
         }
 
-        authCode = Integer.parseInt(randomNumber);
+        authCode = randomNumber;
     }
     public String sendEmail(SendMailRequest request) {
         makeEmailAuthCode();
@@ -45,8 +47,9 @@ public class MailService {
                         "인증번호를 사이트에 입력해주세요."; //이메일 내용 삽입
         mailSend(setFrom,setFromName, toMail, title, content);
 
+        redisTemplate.opsForValue().set(toMail, authCode,5, TimeUnit.MINUTES);
 
-        return Integer.toString(authCode);
+        return authCode;
     }
 
     public void mailSend(String setFrom, String setFromName, String toMail, String title, String content) {
@@ -68,6 +71,9 @@ public class MailService {
     }
 
     public Boolean confirmMail(ConfirmMailRequest request) {
-        return true;
+        String authCode = (String)redisTemplate.opsForValue().get(request.getEmail());
+
+        return request.getEmailAuthCode().equals(authCode);
     }
+
 }
