@@ -1,9 +1,11 @@
-package com.gg.mafia.domain.member.domain;
+package com.gg.mafia.domain.achievement.domain;
 
+import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.model.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,50 +21,37 @@ import lombok.NoArgsConstructor;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        columnNames = {"user_id", "role_id"}
+                        columnNames = {"user_id", "achievement_id"}
                 )
         }
 )
-public class UserToRole extends BaseEntity {
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+public class UserAchievement extends BaseEntity {
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Role role;
+    private Achievement achievement;
 
     @Builder
-    public UserToRole(User user, Role role) {
+    public UserAchievement(User user, Achievement achievement) {
         setUser(user);
-        setRole(role);
+        this.achievement = achievement;
     }
 
-
-    public static UserToRole relate(User user, Role role) {
-        UserToRole userToRole = new UserToRole();
-        userToRole.setUser(user);
-        userToRole.setRole(role);
-        return userToRole;
+    public static UserAchievement relate(User user, Achievement achievement) {
+        return UserAchievement.builder()
+                .user(user)
+                .achievement(achievement)
+                .build();
     }
 
     public void setUser(User user) {
         if (this.user != null) {
-            this.user.getUserToRoles().remove(this);
+            this.user.getUserAchievements().remove(this);
         }
         this.user = user;
-        this.user.getUserToRoles().add(this);
-    }
-
-    public void setRole(Role role) {
-        if (this.role != null) {
-            this.role.getUserToRoles().remove(this);
-        }
-        this.role = role;
-        this.role.getUserToRoles().add(this);
-    }
-
-    public String getRoleName() {
-        return this.role.getValue().name();
+        this.user.getUserAchievements().add(this);
     }
 }
