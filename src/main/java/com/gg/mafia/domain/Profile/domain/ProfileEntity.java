@@ -29,4 +29,20 @@ public class ProfileEntity extends BaseEntity {
     //profile의 외래키열의 이름은 user_id 참조하는 열은 id라 생각해서 작성
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
+    //erd변경후 새로추가
+    @Column(nullable = false)
+    private String userName;
+    @Column(nullable = false)
+    private int ranking;
+    @Column(nullable = false)
+    private float mafiaOdd;
+    @Column(nullable = false)
+    private float citizenOdd;
+    @Column(nullable = false)
+    private float policeOdd;
+    @Column(nullable = false)
+    private float doctorOdd;
+    @Column(nullable = false)
+    private float averageOdd;
+
 }
