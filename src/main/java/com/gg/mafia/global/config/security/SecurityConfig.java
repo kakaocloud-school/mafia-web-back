@@ -48,8 +48,7 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/"),
                 new AntPathRequestMatcher("/member/authenticate"),
                 new AntPathRequestMatcher("/member/signup"),
-                new AntPathRequestMatcher("/user/{id}"),
-                new AntPathRequestMatcher("/user/all"),
+                new AntPathRequestMatcher("/profile/**"),
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests

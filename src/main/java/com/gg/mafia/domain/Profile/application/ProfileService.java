@@ -1,5 +1,7 @@
 package com.gg.mafia.domain.Profile.application;
 
+import static java.lang.Math.ceil;
+
 import com.gg.mafia.domain.Profile.dao.ProfileDao;
 import com.gg.mafia.domain.Profile.domain.ProfileEntity;
 import com.gg.mafia.domain.Profile.dto.ProfileMapper;
@@ -38,10 +40,20 @@ public class ProfileService {
 
     }
 
+    public ProfileResponse getByUserName(String name) {
+        ProfileEntity profile = findByUserName(name);
+        List<ProfileEntity> profileForUpdate = new ArrayList<>();
+        profileForUpdate.add(profile);
+        this.oddUpdate(profileForUpdate);
+
+        return profileMapper.toProfileResponse(profile);
+    }
+
     //모든 유저의 프로필을 랭킹별 오름차순정렬해서 가져옴
     public List<ProfileResponse> getAllUserWithRank() {
         List<ProfileEntity> profileList = profileDao.findAll();
         this.oddUpdate(profileList);
+        this.rankingUpdate(profileList);
         profileList.sort(Comparator.comparingInt(ProfileEntity::getRanking));
         return profileMapper.toProfileResponseList(profileList);
     }
@@ -50,28 +62,28 @@ public class ProfileService {
     public List<ProfileResponse> getAllUserWithMafiaOdd() {
         List<ProfileEntity> profileList = profileDao.findAll();
         this.oddUpdate(profileList);
-        profileList.sort(Comparator.comparingDouble(ProfileEntity::getMafiaOdd));
+        profileList.sort(Comparator.comparingDouble(ProfileEntity::getMafiaOdd).reversed());
         return profileMapper.toProfileResponseList(profileList);
     }
 
     public List<ProfileResponse> getAllUserWithDoctorOdd() {
         List<ProfileEntity> profileList = profileDao.findAll();
         this.oddUpdate(profileList);
-        profileList.sort(Comparator.comparingDouble(ProfileEntity::getDoctorOdd));
+        profileList.sort(Comparator.comparingDouble(ProfileEntity::getDoctorOdd).reversed());
         return profileMapper.toProfileResponseList(profileList);
     }
 
     public List<ProfileResponse> getAllUserWithPoliceOdd() {
         List<ProfileEntity> profileList = profileDao.findAll();
         this.oddUpdate(profileList);
-        profileList.sort(Comparator.comparingDouble(ProfileEntity::getPoliceOdd));
+        profileList.sort(Comparator.comparingDouble(ProfileEntity::getPoliceOdd).reversed());
         return profileMapper.toProfileResponseList(profileList);
     }
 
     public List<ProfileResponse> getAllUserWithCitizenOdd() {
         List<ProfileEntity> profileList = profileDao.findAll();
         this.oddUpdate(profileList);
-        profileList.sort(Comparator.comparingDouble(ProfileEntity::getCitizenOdd));
+        profileList.sort(Comparator.comparingDouble(ProfileEntity::getCitizenOdd).reversed());
         return profileMapper.toProfileResponseList(profileList);
     }
 
@@ -84,8 +96,26 @@ public class ProfileService {
         profileDao.save(profileMapper.toEntity(request));
     }
 
+    public void patchWinRating(String myName, String opName) {
+        ratingCal(myName, opName, true);
+    }
+
+    public void patchLoseRating(String myName, String opName) {
+
+        ratingCal(myName, opName, false);
+    }
+
     private ProfileEntity findById(Long id) {
         Optional<ProfileEntity> OProfileEntity = profileDao.findById(id);
+        if (OProfileEntity.isPresent()) {
+            return OProfileEntity.get();
+        } else {
+            throw new EntityNotFoundException("존재하지 않는 리소스");
+        }
+    }
+
+    private ProfileEntity findByUserName(String userName) {
+        Optional<ProfileEntity> OProfileEntity = profileDao.findByUserName(userName);
         if (OProfileEntity.isPresent()) {
             return OProfileEntity.get();
         } else {
@@ -107,5 +137,46 @@ public class ProfileService {
         }
 
     }
+
+    //레이팅에 따라 랭킹업데이트
+    private void rankingUpdate(List<ProfileEntity> profileEntities) {
+        profileEntities.sort(Comparator.comparingInt(ProfileEntity::getRating).reversed());
+        int ranking = 1;
+        for (ProfileEntity profile : profileEntities) {
+            profile.setRanking(ranking);
+            ranking += 1;
+            profileDao.save(profile);
+        }
+
+    }
+
+    private void ratingCal(String myName, String opName, boolean winOrLose) {
+        ProfileEntity myEntity = findByUserName(myName);
+        ProfileEntity opEntity = findByUserName(opName);
+        int mR = myEntity.getRating();
+        int oR = opEntity.getRating();
+        //엘로레이팅의 기대 승률
+        double myExpectedOdd = 1 / ((Math.pow(10, (double) (oR - mR) / 400)) + 1);
+        double opExpectedOdd = 1 / ((Math.pow(10, (double) (mR - oR) / 400)) + 1);
+        int myNowRating = myEntity.getRating();
+        int opNowRating = opEntity.getRating();
+        double myChangeRating = 0;
+        double opChangeRating = 0;
+        if (winOrLose) {
+            //엘로레이팅의 변화하는 레이팅
+            myChangeRating = ceil(myNowRating + 20 * (1 - myExpectedOdd));
+            opChangeRating = ceil(opNowRating + 20 * (0 - opExpectedOdd));
+
+        } else {
+            //엘로레이팅의 변화하는 레이팅
+            myChangeRating = ceil(myNowRating + 20 * (0 - myExpectedOdd));
+            opChangeRating = ceil(opNowRating + 20 * (1 - opExpectedOdd));
+        }
+        myEntity.setRating((int) myChangeRating);
+        opEntity.setRating((int) opChangeRating);
+        profileDao.save(myEntity);
+        profileDao.save(opEntity);
+    }
+
 
 }

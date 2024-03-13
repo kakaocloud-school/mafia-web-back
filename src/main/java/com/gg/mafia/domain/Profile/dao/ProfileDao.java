@@ -14,4 +14,6 @@ public interface ProfileDao extends JpaRepository<ProfileEntity, Long> {
     @NonNull
     Optional<ProfileEntity> findByUser(@NonNull User user);
 
+    @NonNull
+    Optional<ProfileEntity> findByUserName(@NonNull String userName);
 }
