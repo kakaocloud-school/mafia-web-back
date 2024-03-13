@@ -9,4 +9,6 @@ public interface AchievementStepDao extends JpaRepository<AchievementStep, Long>
     @Override
     @NonNull
     Optional<AchievementStep> findById(@NonNull Long id);
+
+    Optional<AchievementStep> findByUser_id(@NonNull Long userId);
 }
