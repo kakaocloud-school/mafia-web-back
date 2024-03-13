@@ -26,13 +26,13 @@ public class AchievementService {
 
     // 업적 단계
     public AchievementStep getStepsByUser_id(Long user_id) {
-        return achievementStepDao.findByUser_id(user_id)
+        return achievementStepDao.findByUserId(user_id)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("%s에 알맞은 업적단계 데이터가 없습니다.")));
     }
 
     // 보유 업적
     public List<AchievementEnum> getOwnAchievementByUser_id(Long user_id) {
-        return userAchievementDao.findByUser_id(user_id).stream()
+        return userAchievementDao.findByUserId(user_id).stream()
                 .map(e -> e.getAchievement().getAchievementName())
                 .toList();
     }

@@ -2,6 +2,7 @@ package com.gg.mafia.domain.achievement.application;
 
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.gg.mafia.domain.achievement.dao.AchievementDao;
 import com.gg.mafia.domain.achievement.dao.AchievementStepDao;
@@ -50,11 +51,12 @@ public class AchievementServiceTest {
     @DisplayName("회원의 업적 단계를 조회한다.")
     public void getStepsByUser_id_Test() {
         AchievementStep expect = AchievementStep.builder().user(user).build();
+        given(achievementStepDao.findByUserId(user.getId())).willReturn(Optional.of(expect));
 
-        given(achievementStepDao.findByUser_id(user.getId())).willReturn(Optional.of(expect));
-        AchievementStep result = service.getStepsByUser_id(user.getId());
+        AchievementStep actual = service.getStepsByUser_id(user.getId());
+        Assertions.assertThat(expect).isEqualTo(actual);
 
-        Assertions.assertThat(expect).isEqualTo(result);
+        then(achievementStepDao).should().findByUserId(user.getId());
     }
 
     @Test
@@ -64,11 +66,12 @@ public class AchievementServiceTest {
                 new AchievementEnum[]{AchievementEnum.궁예, AchievementEnum.순경, AchievementEnum.멍때리기}
         ).stream().map(e -> UserAchievement.relate(user, e)).toList();
 
-        given(userAchievementDao.findByUser_id(user.getId())).willReturn(expect);
+        given(userAchievementDao.findByUserId(user.getId())).willReturn(expect);
 
         List<AchievementEnum> result = service.getOwnAchievementByUser_id(user.getId());
         expect.stream().forEach(
                 e -> Assertions.assertThat(result.contains(e.getAchievement().getAchievementName())).isTrue());
+        then(userAchievementDao).should().findByUserId(user.getId());
     }
 
     @Test
@@ -108,8 +111,8 @@ public class AchievementServiceTest {
                 expect2.stream().map(e -> e.getAchievement().getAchievementName()).toList(), expect1);
         List<AchievementEnum> expect4 = Arrays.asList(AchievementEnum.직무유기, AchievementEnum.KILLER);
 
-        given(achievementStepDao.findByUser_id(user.getId())).willReturn(Optional.of(expect1));
-        given(userAchievementDao.findByUser_id(user.getId())).willReturn(expect2);
+        given(achievementStepDao.findByUserId(user.getId())).willReturn(Optional.of(expect1));
+        given(userAchievementDao.findByUserId(user.getId())).willReturn(expect2);
 
         dto = service.getAchievementDto(user.getId());
         Assertions.assertThat(expect1).isEqualTo(dto.getSteps());
@@ -119,7 +122,8 @@ public class AchievementServiceTest {
                 dto.getAchievemenToComplete().contains(e)).isTrue());
         expect4.stream().forEach(e -> Assertions.assertThat(
                 dto.getCompletedAchievement().contains(e)).isTrue());
-//        Assertions.assertThat(dto.getSteps()).isNotEqualTo(expect1);
+        then(achievementStepDao).should().findByUserId(user.getId());
+        then(userAchievementDao).should().findByUserId(user.getId());
     }
 
     @Test
@@ -143,6 +147,4 @@ public class AchievementServiceTest {
         });
         return result;
     }
-
-
 }

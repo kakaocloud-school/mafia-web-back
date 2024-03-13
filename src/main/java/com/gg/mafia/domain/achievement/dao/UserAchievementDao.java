@@ -14,7 +14,7 @@ public interface UserAchievementDao extends JpaRepository<UserAchievement, Long>
     Optional<UserAchievement> findById(@NonNull Long id);
 
     @Query(value = "SELECT a FROM UserAchievement a left join fetch a.user u where a.user.id = :user_id")
-    List<UserAchievement> findByUser_id(@Param("user_id") Long user_id);
+    List<UserAchievement> findByUserId(@Param("user_id") Long user_id);
 
-    List<UserAchievement> findByAchievement_id(@NonNull Long achievement_id);
+    List<UserAchievement> findByAchievementId(@NonNull Long achievement_id);
 }

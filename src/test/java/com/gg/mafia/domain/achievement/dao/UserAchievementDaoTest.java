@@ -55,14 +55,14 @@ class UserAchievementDaoTest {
     @Test
     @DisplayName("findByUser_id 값으로 받은 객체의 user_id 값을 비교한다.")
     public void findByUser_id_Test() {
-        find = dao.findByUser_id(origin.getUser().getId()).get(0);
+        find = dao.findByUserId(origin.getUser().getId()).get(0);
         Assertions.assertThat(find.getUser().getId()).isEqualTo(origin.getUser().getId());
     }
 
     @Test
     @DisplayName("findByAchievement_id 값으로 받은 객체의 achievement_id 값을 비교한다.")
     public void findByAchievement_id_Test() {
-        find = dao.findByAchievement_id(origin.getAchievement().getId()).get(0);
+        find = dao.findByAchievementId(origin.getAchievement().getId()).get(0);
         Assertions.assertThat(find.getAchievement().getId()).isEqualTo(origin.getAchievement().getId());
     }
 
