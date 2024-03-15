@@ -12,7 +12,8 @@ public enum JobEnum {
     CITIZEN(0),
     MAFIA(1),
     DOCTOR(2),
-    POLICE(3);
+    POLICE(3),
+    COMMON(4);
 
     private static final Map<Integer, JobEnum> valueToName =
             Collections.unmodifiableMap(Stream.of(values())

@@ -5,5 +5,5 @@ import com.gg.mafia.domain.achievement.domain.AchievementEnum;
 import java.util.Optional;
 
 public interface AchievementDaoCustom {
-    Optional<Achievement> findByValue(AchievementEnum achievementEnum);
+    Optional<Achievement> findByAchieveName(AchievementEnum achievementEnum);
 }

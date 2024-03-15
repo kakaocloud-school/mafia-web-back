@@ -2,6 +2,8 @@ package com.gg.mafia.domain.achievement.dao;
 
 import com.gg.mafia.domain.achievement.domain.Achievement;
 import com.gg.mafia.domain.achievement.domain.AchievementEnum;
+import com.gg.mafia.domain.achievement.domain.UserAchievement;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +21,13 @@ public interface AchievementDao extends JpaRepository<Achievement, Long>, Achiev
     Optional<Achievement> findById(@NonNull Long id);
 
     @Override
-    Optional<Achievement> findByValue(AchievementEnum achievementEnum);
+    Optional<Achievement> findByAchieveName(AchievementEnum achievementEnum);
 
     @Query("SELECT COUNT(*) FROM Achievement a")
     Long getAchievementCount();
+
+    @Query(value = "SELECT u FROM UserAchievement u left join fetch u.user f")
+    List<UserAchievement> findAchieve();
+
+    Optional<Achievement> findByAchievementName(AchievementEnum achievementEnum);
 }

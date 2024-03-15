@@ -8,6 +8,7 @@ import com.gg.mafia.global.config.db.TestDbConfig;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -31,11 +32,23 @@ public class AchievementDaoTest {
     @Autowired
     AchievementDao dao;
 
+    @BeforeEach
+    public void setUp() {
+        insertAchievements();
+    }
+
     @Test
     @DisplayName("기본 업적 개수를 확인한다.")
     public void dbConfigTest() {
-        insertAchievements();
         Assertions.assertThat(AchievementEnum.values().length).isEqualTo((long) dao.getAchievementCount());
+    }
+
+    @Test
+    @DisplayName("achieveName값으로 조회한다.")
+    public void findByValue_Test() {
+        insertAchievements();
+        Assertions.assertThat(dao.findByAchieveName(AchievementEnum.궁예).get().getAchievementName())
+                .isEqualTo(AchievementEnum.궁예);
     }
 
     private void insertAchievements() {
@@ -43,7 +56,7 @@ public class AchievementDaoTest {
     }
 
     private void insertAchievement(AchievementEnum value) {
-        if (dao.findByValue(value).isEmpty()) {
+        if (dao.findByAchieveName(value).isEmpty()) {
             trySave(dao, Achievement.builder()
                     .achievementName(value)
                     .jobName(value.getJobEnum())

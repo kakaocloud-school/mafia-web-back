@@ -6,16 +6,19 @@ import com.gg.mafia.domain.record.domain.JobEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Entity
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@ToString(of = {"achievementName", "jobName"})
 public class Achievement extends BaseEntity {
     @Column(unique = true)
     @Convert(converter = AchievementConverter.class)

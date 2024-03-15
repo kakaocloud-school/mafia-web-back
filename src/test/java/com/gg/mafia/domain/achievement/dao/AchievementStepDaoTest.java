@@ -2,6 +2,7 @@ package com.gg.mafia.domain.achievement.dao;
 
 import com.gg.mafia.domain.achievement.domain.AchievementStep;
 import com.gg.mafia.domain.member.domain.User;
+import com.gg.mafia.domain.record.domain.JobEnum;
 import com.gg.mafia.global.config.AppConfig;
 import com.gg.mafia.global.config.auditing.AuditingConfig;
 import com.gg.mafia.global.config.db.TestDbConfig;
@@ -52,8 +53,8 @@ public class AchievementStepDaoTest {
     @Test
     @DisplayName("업적단계 값을 1씩 증가시킨다.")
     public void increaseByCommonAchievement() {
-        String[] names = new String[]{"common", "mafia", "police", "citizen", "doctor"};
-        repeatByIncreaseTest(names);
+        JobEnum[] arr = new JobEnum[]{JobEnum.DOCTOR, JobEnum.MAFIA};
+        repeatByIncreaseTest(arr);
         dao.save(origin);
         AchievementStep find = dao.findById(origin.getId()).get();
         log.info("result : {}", find.getCommonAchieveStep());
@@ -63,18 +64,18 @@ public class AchievementStepDaoTest {
     @Test
     @DisplayName("올바르지 않은 이름을 전달하면 IllegalArgument 예외를 발생한다.")
     public void inaccuracyNameThrowIllegalArgument() {
-        String[] names = new String[]{"common", "mafia", "police", "citizen", "couple"};
-        Assertions.assertThatThrownBy(() -> repeatByIncreaseTest(names)).isInstanceOf(IllegalArgumentException.class);
+        JobEnum[] arr = new JobEnum[]{JobEnum.DOCTOR, JobEnum.MAFIA, null};
+        Assertions.assertThatThrownBy(() -> repeatByIncreaseTest(arr)).isInstanceOf(IllegalArgumentException.class);
     }
 
 
-    public void increaseTest(String name) {
-        origin.increase(name);
+    public void increaseTest(JobEnum jobEnum) {
+        origin.increase(jobEnum);
     }
 
-    public void repeatByIncreaseTest(String[] names) {
-        for (int i = 0; i < names.length; i++) {
-            increaseTest(names[i]);
+    public void repeatByIncreaseTest(JobEnum[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            increaseTest(arr[i]);
         }
     }
 }

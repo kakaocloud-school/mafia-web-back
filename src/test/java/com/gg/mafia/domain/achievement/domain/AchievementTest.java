@@ -9,6 +9,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnit;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -66,6 +69,15 @@ public class AchievementTest {
         Achievement findAchievement = em.createQuery(achievementJpql, Achievement.class)
                 .getSingleResult();
         Assertions.assertThat(findAchievement).isEqualTo(userAchievement.getAchievement());
+    }
+
+    public List<AchievementEnum> filterStep(List<AchievementEnum> list, int step) {
+        return list.stream().filter((e) -> e.getStep() == step).collect(Collectors.toList());
+    }
+
+    public List<AchievementEnum> filterJobName(JobEnum jobEnum) {
+        return Arrays.stream(AchievementEnum.values())
+                .filter((e) -> e.getJobEnum().equals(jobEnum)).collect(Collectors.toList());
     }
 
     @Test
