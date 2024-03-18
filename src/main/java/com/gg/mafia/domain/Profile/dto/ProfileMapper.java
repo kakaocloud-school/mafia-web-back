@@ -14,7 +14,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+
 public interface ProfileMapper {
 
     //user.id를 userId에 맵핑한다는것빼고 필드가 같음 이렇게 해도 될것같음
