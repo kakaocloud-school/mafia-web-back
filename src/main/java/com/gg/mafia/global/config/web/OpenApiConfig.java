@@ -1,4 +1,4 @@
-package com.gg.mafia.global.config.mvc;
+package com.gg.mafia.global.config.web;
 
 import com.gg.mafia.global.util.Constant;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

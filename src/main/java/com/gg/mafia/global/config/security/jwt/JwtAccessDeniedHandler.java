@@ -1,4 +1,4 @@
-package com.gg.mafia.global.config.security;
+package com.gg.mafia.global.config.security.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
