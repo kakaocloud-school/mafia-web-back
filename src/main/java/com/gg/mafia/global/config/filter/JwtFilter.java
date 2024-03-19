@@ -1,6 +1,6 @@
 package com.gg.mafia.global.config.filter;
 
-import com.gg.mafia.global.config.security.TokenProvider;
+import com.gg.mafia.global.config.security.jwt.TokenProvider;
 import com.gg.mafia.global.util.Constant;
 import com.gg.mafia.global.util.Util;
 import jakarta.servlet.FilterChain;
