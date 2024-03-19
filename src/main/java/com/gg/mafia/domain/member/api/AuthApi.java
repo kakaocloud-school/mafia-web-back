@@ -7,6 +7,7 @@ import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
 import com.gg.mafia.global.common.response.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -37,8 +38,15 @@ public class AuthApi {
     }
 
     @PostMapping("/sendMail")
-    public ResponseEntity<ApiResponse<String>> sendMail(@RequestBody @Validated SendMailRequest request){
-        String authCode = mailService.sendEmail(request);
+    public ResponseEntity<ApiResponse<String>> sendMail(@RequestBody @Validated SendMailRequest request, HttpServletRequest servletRequest){
+        String clientIP = servletRequest.getHeader("X-Forwarded-For");
+
+        // X-Forwarded-For 헤더가 없거나 비어 있는 경우, 클라이언트의 IP 주소는 remoteAddr로부터 가져옴
+        if (clientIP == null || clientIP.isEmpty()) {
+            clientIP = servletRequest.getRemoteAddr();
+        }
+
+        String authCode = mailService.sendEmail(request, clientIP);
         return ResponseEntity.ok().body(ApiResponse.success(authCode));
     }
 

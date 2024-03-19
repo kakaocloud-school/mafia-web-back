@@ -2,6 +2,7 @@ package com.gg.mafia.global.error;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.gg.mafia.domain.member.exception.LoginFailedException;
+import com.gg.mafia.domain.member.exception.RequestThrottlingException;
 import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
@@ -66,6 +67,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ResponseEntity<ApiResponse<Void>> handleUnauthorizedException(LoginFailedException exception) {
         logger.error("message", exception);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error(exception.getMessage()));
+    }
+
+    @ExceptionHandler(RequestThrottlingException.class)
+    ResponseEntity<ApiResponse<Void>> handleRequestThrottlingException(RequestThrottlingException exception) {
+        logger.error("message", exception);
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .body(ApiResponse.error(exception.getMessage()));
     }
 

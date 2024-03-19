@@ -2,6 +2,7 @@ package com.gg.mafia.domain.member.application;
 
 import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
+import com.gg.mafia.domain.member.exception.RequestThrottlingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Service;
 public class MailService {
     @Autowired
     private JavaMailSender mailSender;
-
+    @Autowired
+    private ThrottlingService throttlingService;
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     private String authCode;
@@ -33,7 +35,7 @@ public class MailService {
 
         authCode = randomNumber;
     }
-    public String sendEmail(SendMailRequest request) {
+    public String sendEmail(SendMailRequest request,String clientIP) {
         makeEmailAuthCode();
         String setFromName = "MAFIA.GG";
         String setFrom = "rkdwlgns1119@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
@@ -45,14 +47,14 @@ public class MailService {
                         "인증 번호는 " + authCode + "입니다." +
                         "<br>" +
                         "인증번호를 사이트에 입력해주세요."; //이메일 내용 삽입
-        mailSend(setFrom,setFromName, toMail, title, content);
+        mailSend(setFrom,setFromName, toMail, title, content, clientIP);
 
         redisTemplate.opsForValue().set(toMail, authCode,5, TimeUnit.MINUTES);
 
         return authCode;
     }
 
-    public void mailSend(String setFrom, String setFromName, String toMail, String title, String content) {
+    public void mailSend(String setFrom, String setFromName, String toMail, String title, String content,String clientIP) {
         MimeMessage message = mailSender.createMimeMessage();//JavaMailSender 객체를 사용하여 MimeMessage 객체를 생성
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");//이메일 메시지와 관련된 설정을 수행합니다.
@@ -61,7 +63,12 @@ public class MailService {
             helper.setTo(toMail);//이메일의 수신자 주소 설정
             helper.setSubject(title);//이메일의 제목을 설정
             helper.setText(content,true);//이메일의 내용 설정 두 번째 매개 변수에 true를 설정하여 html 설정으로한다.
-            mailSender.send(message);
+            if(throttlingService.allowRequest(clientIP)){
+                mailSender.send(message);
+            }else{
+                throw new RequestThrottlingException("ip - "+clientIP+"= too many request");
+            }
+
         } catch (MessagingException e) {//이메일 서버에 연결할 수 없거나, 잘못된 이메일 주소를 사용하거나, 인증 오류가 발생하는 등 오류
             // 이러한 경우 MessagingException이 발생
             e.printStackTrace();//e.printStackTrace()는 예외를 기본 오류 스트림에 출력하는 메서드
