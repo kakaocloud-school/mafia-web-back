@@ -12,8 +12,13 @@ public class AchievementDaoImpl implements AchievementDaoCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Achievement> findByValue(AchievementEnum achievementEnum) {
+    public Optional<Achievement> findByAchieveName(AchievementEnum achievementEnum) {
         QAchievement achievement = QAchievement.achievement;
-        return null;
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(achievement)
+                        .where(achievement.achievementName.eq(achievementEnum))
+                        .fetchOne()
+        );
     }
 }

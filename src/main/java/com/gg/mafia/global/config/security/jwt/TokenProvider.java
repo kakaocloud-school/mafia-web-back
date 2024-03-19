@@ -1,4 +1,4 @@
-package com.gg.mafia.global.config.security;
+package com.gg.mafia.global.config.security.jwt;
 
 import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;

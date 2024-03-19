@@ -41,7 +41,7 @@ public class DbRowConfig implements InitializingBean {
     }
 
     private void insertAchievement(AchievementEnum value) {
-        if (achievementDao.findByValue(value).isEmpty()) {
+        if (achievementDao.findByAchieveName(value).isEmpty()) {
             trySave(achievementDao, Achievement.builder()
                     .achievementName(value)
                     .jobName(value.getJobEnum())

@@ -1,7 +1,10 @@
 package com.gg.mafia.global.config.security;
 
 import com.gg.mafia.global.config.filter.JwtFilter;
+import com.gg.mafia.global.config.security.jwt.JwtAccessDeniedHandler;
+import com.gg.mafia.global.config.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +20,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity // 스프링 필터 체인에 스프링 시큐리티 필터를 등록
@@ -39,7 +43,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity builder, AuthenticationManager authenticationManager)
+    public SecurityFilterChain filterChain(
+            HttpSecurity builder,
+            AuthenticationManager authenticationManager,
+            @Qualifier("corsConfigurationSource") CorsConfigurationSource configurationSource
+    )
             throws Exception {
         AntPathRequestMatcher[] apiWhitelist = new AntPathRequestMatcher[]{
                 new AntPathRequestMatcher("/swagger-ui/**"),
@@ -65,6 +73,7 @@ public class SecurityConfig {
                 exceptionHandling
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler));
+        builder.cors(cors -> cors.configurationSource(configurationSource));
         return builder.build();
     }
 }
