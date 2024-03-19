@@ -11,7 +11,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
         @PropertySource("classpath:config/db.properties"),
         @PropertySource("classpath:config/application.properties"),
         @PropertySource("classpath:config/swagger.properties"),
-        @PropertySource("classpath:config/security.properties")
+        @PropertySource("classpath:config/security.properties"),
+        @PropertySource("classpath:config/email.properties")
 })
 public class AppConfig {
     @Bean
