@@ -35,7 +35,7 @@ public class MailService {
 
         authCode = randomNumber;
     }
-    public String sendEmail(SendMailRequest request,String clientIP) {
+    public void sendEmail(SendMailRequest request,String clientIP) {
         makeEmailAuthCode();
         String setFromName = "MAFIA.GG";
         String setFrom = "rkdwlgns1119@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
@@ -51,7 +51,6 @@ public class MailService {
 
         redisTemplate.opsForValue().set(toMail, authCode,5, TimeUnit.MINUTES);
 
-        return authCode;
     }
 
     public void mailSend(String setFrom, String setFromName, String toMail, String title, String content,String clientIP) {
@@ -80,7 +79,7 @@ public class MailService {
     public Boolean confirmMail(ConfirmMailRequest request) {
         String authCode = (String)redisTemplate.opsForValue().get(request.getEmail());
 
-        return request.getEmailAuthCode().equals(authCode);
+        return request.getEmailCode().equals(authCode);
     }
 
 }

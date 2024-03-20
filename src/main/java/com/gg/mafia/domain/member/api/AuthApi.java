@@ -46,8 +46,8 @@ public class AuthApi {
             clientIP = servletRequest.getRemoteAddr();
         }
 
-        String authCode = mailService.sendEmail(request, clientIP);
-        return ResponseEntity.ok().body(ApiResponse.success(authCode));
+        mailService.sendEmail(request, clientIP);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/confirmMail")

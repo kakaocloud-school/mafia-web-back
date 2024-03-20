@@ -11,5 +11,5 @@ public class ConfirmMailRequest {
     private String email;
 
     @NotBlank
-    private String emailAuthCode;
+    private String emailCode;
 }
