@@ -1,7 +1,7 @@
 package com.gg.mafia.sample;
 
 
-import com.gg.mafia.global.config.web.RestTemplateConfig;
+import com.gg.mafia.global.config.network.RestTemplateConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
