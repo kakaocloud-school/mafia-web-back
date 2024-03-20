@@ -6,6 +6,7 @@ import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
+import com.gg.mafia.domain.member.exception.UserNotAllowedException;
 import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,9 @@ public class AuthApi {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Validated SignupRequest request) {
+        if(!mailService.confirmMail(request.getEmail(),request.getEmailCode())){
+            throw new UserNotAllowedException("인증되지 않은 사용자입니다.");
+        }
         authService.signup(request);
         return ResponseEntity.ok().build();
     }
@@ -52,7 +56,7 @@ public class AuthApi {
 
     @PostMapping("/confirmMail")
     public ResponseEntity<ApiResponse<Boolean>> confirmMail(@RequestBody @Validated ConfirmMailRequest request){
-        Boolean isCodeMatching = mailService.confirmMail(request);
+        Boolean isCodeMatching = mailService.confirmMail(request.getEmail(),request.getEmailCode());
         return ResponseEntity.ok().body(ApiResponse.success(isCodeMatching));
     }
 }

@@ -1,8 +1,9 @@
 package com.gg.mafia.domain.member.application;
 
-import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
+import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
 import com.gg.mafia.domain.member.exception.RequestThrottlingException;
+import com.gg.mafia.domain.member.exception.UserAlreadyExistsException;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +26,7 @@ public class MailService {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     private String authCode;
+    private final UserDao userDao;
 
     public void makeEmailAuthCode() {
         Random rnd = new Random();
@@ -36,6 +38,10 @@ public class MailService {
         authCode = randomNumber;
     }
     public void sendEmail(SendMailRequest request,String clientIP) {
+        if(userDao.findByEmail(request.getEmail()).isPresent()){
+            throw new UserAlreadyExistsException();
+        }
+
         makeEmailAuthCode();
         String setFromName = "MAFIA.GG";
         String setFrom = "rkdwlgns1119@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
@@ -76,10 +82,10 @@ public class MailService {
         }
     }
 
-    public Boolean confirmMail(ConfirmMailRequest request) {
-        String authCode = (String)redisTemplate.opsForValue().get(request.getEmail());
+    public Boolean confirmMail(String email,String emailCode) {
+        String authCode = (String)redisTemplate.opsForValue().get(email);
 
-        return request.getEmailCode().equals(authCode);
+        return emailCode.equals(authCode);
     }
 
 }

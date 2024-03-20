@@ -14,4 +14,10 @@ public class SignupRequest {
     @NotBlank
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$")
     private String password;
+
+    @NotBlank
+    private String nickname;
+
+    @NotBlank
+    private String emailCode;
 }
