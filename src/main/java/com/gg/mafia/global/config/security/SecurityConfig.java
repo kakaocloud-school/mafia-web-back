@@ -57,7 +57,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/member/authenticate"),
                 new AntPathRequestMatcher("/member/signup"),
                 new AntPathRequestMatcher("/member/sendMail"),
-                new AntPathRequestMatcher("/member/confirmMail")
+                new AntPathRequestMatcher("/member/confirmMail"),
+                new AntPathRequestMatcher("/member/oauth-types/**/validate-oauth2-code")
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests

@@ -1,4 +1,4 @@
-package com.gg.mafia.global.config.web;
+package com.gg.mafia.global.config.network;
 
 
 import java.util.concurrent.TimeUnit;

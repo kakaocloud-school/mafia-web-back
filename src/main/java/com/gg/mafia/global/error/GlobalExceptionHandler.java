@@ -5,6 +5,7 @@ import com.gg.mafia.domain.member.exception.LoginFailedException;
 import com.gg.mafia.domain.member.exception.MailServerException;
 import com.gg.mafia.domain.member.exception.RequestThrottlingException;
 import com.gg.mafia.domain.member.exception.UserAlreadyExistsException;
+import com.gg.mafia.domain.member.exception.SignupFailedException;
 import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ApiResponse.error(message));
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, SignupFailedException.class})
     ResponseEntity<ApiResponse<Void>> handleBadRequestException(RuntimeException exception) {
         logger.error("message", exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
