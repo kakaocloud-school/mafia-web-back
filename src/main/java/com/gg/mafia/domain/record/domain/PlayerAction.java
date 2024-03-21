@@ -26,7 +26,7 @@ import lombok.Setter;
                 )
         }
 )
-public class RoundAction extends BaseEntity {
+public class PlayerAction extends BaseEntity {
     private Integer round;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
@@ -49,8 +49,8 @@ public class RoundAction extends BaseEntity {
 
 
     @Builder
-    public RoundAction(Integer round, GameParticipation gameParticipation, boolean survival, User firstVote,
-                       User secondVote, User actionTarget) {
+    public PlayerAction(Integer round, GameParticipation gameParticipation, boolean survival, User firstVote,
+                        User secondVote, User actionTarget) {
         this.round = round;
         this.survival = survival;
         this.firstVote = firstVote;
@@ -61,9 +61,9 @@ public class RoundAction extends BaseEntity {
 
     public void setGameParticipation(GameParticipation gameParticipation) {
         if (this.gameParticipation != null) {
-            this.gameParticipation.getRoundActions().remove(this);
+            this.gameParticipation.getPlayerActions().remove(this);
         }
         this.gameParticipation = gameParticipation;
-        this.gameParticipation.getRoundActions().add(this);
+        this.gameParticipation.getPlayerActions().add(this);
     }
 }
