@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,6 +29,7 @@ public class MailService {
     private RedisTemplate<String,Object> redisTemplate;
     private String authCode;
     private final UserDao userDao;
+    private final Environment env;
 
     public void makeEmailAuthCode() {
         Random rnd = new Random();
@@ -45,7 +47,7 @@ public class MailService {
 
         makeEmailAuthCode();
         String setFromName = "MAFIA.GG";
-        String setFrom = "rkdwlgns1119@gmail.com";
+        String setFrom = env.getProperty("mail.username");
         String toMail = request.getEmail();
         String title = "회원 가입 인증 이메일 입니다.";
         String content =
