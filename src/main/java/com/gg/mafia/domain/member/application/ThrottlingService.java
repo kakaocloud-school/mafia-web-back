@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ThrottlingService {
     private static final int MAX_TOTAL_BUCKETS = 100; // 최대 버킷 수
-    private static final int DELETE_BUCKETS = 10; // 삭제할 버킷 개수
 
     private static final int MAX_IP_BUCKETS = 10; // ip당 최대 버킷 수
      private final Map<String, Bucket> buckets = new ConcurrentLinkedHashMap.Builder<String, Bucket>()
@@ -38,9 +37,7 @@ public class ThrottlingService {
         return MAX_TOTAL_BUCKETS;
     }
 
-    public int getDeleteBuckets() {
-        return DELETE_BUCKETS;
-    }
+
     public int getMAxIpBuckets() {
         return MAX_IP_BUCKETS;
     }
