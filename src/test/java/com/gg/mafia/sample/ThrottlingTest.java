@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gg.mafia.domain.member.application.ThrottlingService;
+import io.github.bucket4j.Bucket;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -111,7 +113,11 @@ public class ThrottlingTest {
             log.debug("버켓사이즈: "+ throttlingService.getBuckets().size());
         }
 
+        for (Map.Entry<String, Bucket> entry : throttlingService.getBuckets().entrySet()) {
+            String ipAddress = entry.getKey();
 
+            log.debug("버킷에 저장된 IP 주소: " + ipAddress);
+        }
         // 버킷이 제대로 삭제되었는지 확인
         assertTrue(throttlingService.getBuckets().size() <= 100);
     }
