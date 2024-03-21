@@ -1,5 +1,8 @@
 package com.gg.mafia.sample;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.gg.mafia.domain.member.application.ThrottlingService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,6 +13,7 @@ import org.junit.jupiter.api.Test;
 @Slf4j
 public class ThrottlingTest {
     private ThrottlingService throttlingService = new ThrottlingService();
+
 
     @Test
     public void testMaxConcurrentRequests() throws InterruptedException {
@@ -46,6 +50,8 @@ public class ThrottlingTest {
         for (int i = 0; i < clientIPs.length; i++) {
             log.debug("요청IP :" + clientIPs[i] + " 전송 성공 : " + trueCount[i]+"회");
             log.debug("요청IP :" + clientIPs[i] + " 전송 실패 : " + falseCount[i]+"회");
+
+            assertEquals(throttlingService.getMAxIpBuckets(), trueCount[i]);
         }
     }
 
@@ -72,7 +78,7 @@ public class ThrottlingTest {
                     log.debug("요청IP : " + clientIP + " 전송 여부 :  " + allowed);
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -90,6 +96,25 @@ public class ThrottlingTest {
         for (int i = 0; i < clientIPs.length; i++) {
             log.debug("요청IP :" + clientIPs[i] + " 전송 성공 : " + trueCount[i]+"회");
             log.debug("요청IP :" + clientIPs[i] + " 전송 실패 : " + falseCount[i]+"회");
+
+            assertEquals(requestCount, trueCount[i]);
         }
+
+
     }
+
+    @Test
+    public void testBucketRemoval() {
+        // 버킷 수가 MAX_BUCKETS를 초과하도록 설정
+        for (int i = 0; i < throttlingService.getMaxTotalBuckets()+11; i++) {
+            throttlingService.allowRequest("192.168.1." + i);
+            log.debug("버켓사이즈: "+ throttlingService.getBuckets().size());
+        }
+
+
+        // 버킷이 제대로 삭제되었는지 확인
+        assertTrue(throttlingService.getBuckets().size() <= 100);
+    }
+
+
 }
