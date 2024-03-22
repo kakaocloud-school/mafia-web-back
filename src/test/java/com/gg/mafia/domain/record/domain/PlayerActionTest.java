@@ -34,7 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("라운드 별 행동 기록 엔티티 테스트")
 @Slf4j
-public class RoundActionTest {
+public class PlayerActionTest {
     private final Random rand;
     @PersistenceUnit
     private EntityManagerFactory emf;
@@ -42,9 +42,9 @@ public class RoundActionTest {
     private Game game;
     private GameParticipation gameParticipation;
     private User user;
-    private List<RoundAction> roundActions;
+    private List<PlayerAction> playerActions;
 
-    public RoundActionTest() {
+    public PlayerActionTest() {
         this.rand = new Random();
     }
 
@@ -68,28 +68,28 @@ public class RoundActionTest {
     @Test
     @Order(1)
     @DisplayName("라운드 별 행동 기록 생성 테스트")
-    public void testCreateRoundAction() {
+    public void testCreatePlayerAction() {
         // Given, 게임 기록 DB row 추가된 상태
         game = Game.builder()
                 .build();
         user = createUser();
         gameParticipation = createGameParticipation(game, user);
         int roundNumber = 5;
-        roundActions = createRoundActions(roundNumber);
-        roundActions.forEach(roundAction -> em.persist(roundAction));
+        playerActions = createPlayerActions(roundNumber);
+        playerActions.forEach(playerAction -> em.persist(playerAction));
         em.flush();
         em.clear();
 
         // When, DB에서 해당 ID로 조회할 때
-        List<RoundAction> roundActionsFromDb = roundActions.stream().map(
-                roundAction -> em.find(RoundAction.class, roundAction.getId())
+        List<PlayerAction> playerActionsFromDb = playerActions.stream().map(
+                playerAction -> em.find(PlayerAction.class, playerAction.getId())
         ).toList();
 
         // Then, 조회한 정보와 저장한 정보가 같은가
-        IntStream.range(0, roundActions.size())
+        IntStream.range(0, playerActions.size())
                 .forEach(idx -> {
-                    Assertions.assertThat(roundActions.get(idx))
-                            .isEqualTo(roundActionsFromDb.get(idx));
+                    Assertions.assertThat(playerActions.get(idx))
+                            .isEqualTo(playerActionsFromDb.get(idx));
                 });
     }
 
@@ -103,30 +103,30 @@ public class RoundActionTest {
         em.clear();
 
         // When, 다시 라운드 별 행동 기록 조회할 때
-        List<RoundAction> roundActionsFromDb = roundActions.stream().map(
-                roundAction -> em.find(RoundAction.class, roundAction.getId())
+        List<PlayerAction> playerActionsFromDb = playerActions.stream().map(
+                playerAction -> em.find(PlayerAction.class, playerAction.getId())
         ).toList();
 
         // Then, 라운드 별 행동 기록 모두 null
-        IntStream.range(0, roundActionsFromDb.size())
+        IntStream.range(0, playerActionsFromDb.size())
                 .forEach(idx -> {
-                    Assertions.assertThat(roundActionsFromDb.get(idx))
+                    Assertions.assertThat(playerActionsFromDb.get(idx))
                             .isNull();
                 });
     }
 
-    private List<RoundAction> createRoundActions(int number) {
+    private List<PlayerAction> createPlayerActions(int number) {
         AtomicBoolean survival = new AtomicBoolean(true);
         return IntStream.range(0, number)
                 .mapToObj((idx) -> {
                     survival.set(survival.get() && (rand.nextInt(10) < 8));
-                    return createRoundAction(idx, survival.get());
+                    return createPlayerAction(idx, survival.get());
                 })
                 .collect(Collectors.toList());
     }
 
-    private RoundAction createRoundAction(int idx, boolean survival) {
-        return RoundAction.builder()
+    private PlayerAction createPlayerAction(int idx, boolean survival) {
+        return PlayerAction.builder()
                 .round(idx + 1)
                 .gameParticipation(gameParticipation)
                 .survival(survival)

@@ -47,7 +47,7 @@ public class GameParticipation extends BaseEntity {
 
     @OneToMany(mappedBy = "gameParticipation", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<RoundAction> roundActions = new ArrayList<>();
+    private List<PlayerAction> playerActions = new ArrayList<>();
 
     @Builder
     public GameParticipation(JobEnum job, Boolean survival, User user, Game game) {

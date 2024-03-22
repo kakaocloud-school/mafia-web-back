@@ -1,18 +1,18 @@
 package com.gg.mafia.domain.record.dao;
 
-import com.gg.mafia.domain.record.domain.RoundAction;
+import com.gg.mafia.domain.record.domain.PlayerAction;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 
-public interface RoundActionDao extends JpaRepository<RoundAction, Long> {
+public interface PlayerActionDao extends JpaRepository<PlayerAction, Long> {
     @Override
     @NonNull
-    Page<RoundAction> findAll(@NonNull Pageable pageable);
+    Page<PlayerAction> findAll(@NonNull Pageable pageable);
 
     @Override
     @NonNull
-    Optional<RoundAction> findById(@NonNull Long id);
+    Optional<PlayerAction> findById(@NonNull Long id);
 }
