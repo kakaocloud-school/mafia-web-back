@@ -2,6 +2,9 @@ package com.gg.mafia.global.error;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.gg.mafia.domain.member.exception.LoginFailedException;
+import com.gg.mafia.domain.member.exception.MailServerException;
+import com.gg.mafia.domain.member.exception.RequestThrottlingException;
+import com.gg.mafia.domain.member.exception.UserAlreadyExistsException;
 import com.gg.mafia.domain.member.exception.SignupFailedException;
 import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
@@ -70,6 +73,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ApiResponse.error(exception.getMessage()));
     }
 
+    @ExceptionHandler(RequestThrottlingException.class)
+    ResponseEntity<ApiResponse<Void>> handleRequestThrottlingException(RequestThrottlingException exception) {
+        logger.error("message", exception);
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(ApiResponse.error(exception.getMessage()));
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    ResponseEntity<ApiResponse<Void>> handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
+        logger.error("message", exception);
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(exception.getMessage()));
+    }
+
 //    @ExceptionHandler(UserNotAllowedException.class)
 //    ResponseEntity<ApiResponse<Void>> handleForbiddenException(UserNotAllowedException exception){
 //        logger.error("message", exception);
@@ -91,7 +108,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //                .body(ApiResponse.error(exception.getMessage()));
 //    }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, MailServerException.class})
     ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception exception) {
         logger.error("message", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
