@@ -66,8 +66,10 @@ public class KakaoStrategy implements OAuthStrategy{
             throw new RuntimeException(e);
         }
 
+        String email = rootNode.path("kakao_account").path("email").asText();
+
         return OAuthUserDto.builder()
-                .email(rootNode.path("email").asText())
+                .email(email)
                 .strategyCode(getStrategyCode())
                 .build();
     }
