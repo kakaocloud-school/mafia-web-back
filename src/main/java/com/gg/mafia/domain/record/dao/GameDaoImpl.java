@@ -339,6 +339,6 @@ public class GameDaoImpl implements GameDaoCustom {
             return null;
         }
         QGameRound gameRound = QGameRound.gameRound;
-        return gameRound.curedPlayer.id.eq(matchDetectedPlayerId);
+        return gameRound.detectedPlayer.id.eq(matchDetectedPlayerId);
     }
 }
