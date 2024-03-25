@@ -1,14 +1,12 @@
 package com.gg.mafia.global.config.security.oauth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gg.mafia.domain.member.dto.OAuthUserDto;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,45 +29,40 @@ public class KakaoStrategy implements OAuthStrategy{
         body.add("redirect_uri",  env.getProperty("kakao.redirect-uri"));
         body.add("code", code);
 
+
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        String response = restTemplate.exchange(env.getProperty("kakao.token-uri"), HttpMethod.POST, request, String.class).getBody();
+        ResponseEntity<Map> responseEntity = restTemplate.postForEntity(
+                env.getProperty("kakao.token-uri", ""),
+                request,
+                Map.class
+        );
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = null;
-        try {
-            rootNode = objectMapper.readTree(response);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        Map<String, Object> response = responseEntity.getBody();
 
-        return rootNode.path("access_token").asText();
+        return (String) response.get("access_token");
 
     }
 
     @Override
     public OAuthUserDto getOAuthUser(String accessToken) {
-        String userInfoUrl = env.getProperty("kakao.user-info-uri");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
-        String response = restTemplate.exchange(userInfoUrl, HttpMethod.POST, request, String.class).getBody();
+        ResponseEntity<Map> responseEntity = restTemplate.postForEntity(
+                env.getProperty("kakao.user-info-uri", ""),
+                request,
+                Map.class
+        );
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = null;
-        try {
-            rootNode = objectMapper.readTree(response);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        String email = rootNode.path("kakao_account").path("email").asText();
+        Map<String, Object> response = responseEntity.getBody();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) response.get("kakao_account");
 
         return OAuthUserDto.builder()
-                .email(email)
+                .email((String) kakaoAccount.get("email"))
                 .strategyCode(getStrategyCode())
                 .build();
     }
