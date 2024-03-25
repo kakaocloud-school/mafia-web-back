@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class RatingRequest {
     @NotBlank
-    private String myName;
+    private Long myId;
     @NotBlank
-    private String opponentName;
+    private Long opponentId;
 
 }

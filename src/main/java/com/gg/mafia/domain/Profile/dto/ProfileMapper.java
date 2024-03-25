@@ -13,6 +13,7 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProfileMapper {
@@ -36,7 +37,7 @@ public interface ProfileMapper {
     }
 
     @Mapping(source = "user.id", target = "userId")
-    List<ProfileResponse> toProfileResponseList(List<ProfileEntity> profileEntityList);
+    Page<ProfileResponse> toProfileResponsePage(Page<ProfileEntity> profileEntityList);
 
     @Autowired
     UserDao userdao = null;
