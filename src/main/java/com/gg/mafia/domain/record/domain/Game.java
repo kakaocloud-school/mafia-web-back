@@ -34,6 +34,9 @@ public class Game extends BaseEntity {
     @OneToMany(mappedBy = "game", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<GameParticipation> gameParticipations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "game", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<GameRound> gameRounds = new ArrayList<>();
+
     @Builder
     public Game(Integer round, Boolean mafiaWon) {
         this.round = round;
