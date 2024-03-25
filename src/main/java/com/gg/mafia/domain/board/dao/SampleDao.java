@@ -2,7 +2,7 @@ package com.gg.mafia.domain.board.dao;
 
 import com.gg.mafia.domain.board.domain.Sample;
 import com.gg.mafia.domain.board.dto.SampleSearchRequest;
-import com.gg.mafia.global.common.request.SearchFilter;
+import com.gg.mafia.global.common.request.SearchQuery;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ public interface SampleDao extends JpaRepository<Sample, Long>, SampleDaoCustom 
     Page<Sample> findAll(@NonNull Pageable pageable);
 
     @Override
-    Page<Sample> search(SampleSearchRequest dto, SearchFilter filter, @NonNull Pageable pageable);
+    Page<Sample> search(SampleSearchRequest dto, SearchQuery searchQuery, @NonNull Pageable pageable);
 
     @Override
     @NonNull

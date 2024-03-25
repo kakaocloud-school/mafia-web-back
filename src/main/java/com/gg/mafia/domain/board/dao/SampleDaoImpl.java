@@ -3,7 +3,7 @@ package com.gg.mafia.domain.board.dao;
 import com.gg.mafia.domain.board.domain.QSample;
 import com.gg.mafia.domain.board.domain.Sample;
 import com.gg.mafia.domain.board.dto.SampleSearchRequest;
-import com.gg.mafia.global.common.request.SearchFilter;
+import com.gg.mafia.global.common.request.SearchQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,18 +20,18 @@ public class SampleDaoImpl implements SampleDaoCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Sample> search(SampleSearchRequest request, SearchFilter filter, Pageable pageable) {
+    public Page<Sample> search(SampleSearchRequest request, SearchQuery searchQuery, Pageable pageable) {
         QSample sample = QSample.sample;
         List<Sample> samples = queryFactory
                 .selectFrom(sample)
-                .where(buildSearchCondition(filter), buildRequestCondition(request))
+                .where(buildSearchCondition(searchQuery), buildRequestCondition(request))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
         Long count = queryFactory
                 .select(sample.count())
                 .from(sample)
-                .where(buildSearchCondition(filter), buildRequestCondition(request))
+                .where(buildSearchCondition(searchQuery), buildRequestCondition(request))
                 .fetchOne();
         if (count == null) {
             count = 0L;
@@ -39,13 +39,13 @@ public class SampleDaoImpl implements SampleDaoCustom {
         return new PageImpl<>(samples, pageable, count);
     }
 
-    private BooleanBuilder buildSearchCondition(SearchFilter filter) {
+    private BooleanBuilder buildSearchCondition(SearchQuery searchQuery) {
         return new BooleanBuilder()
-                .and(matchKeyword(filter.getKeyword()))
-                .and(matchCreatedAfter(filter.getCreatedAfter()))
-                .and(matchCreatedBefore(filter.getCreatedBefore()))
-                .and(matchUpdatedAfter(filter.getUpdatedAfter()))
-                .and(matchUpdatedBefore(filter.getUpdatedBefore()));
+                .and(matchKeyword(searchQuery.getKeyword()))
+                .and(matchCreatedAfter(searchQuery.getCreatedAfter()))
+                .and(matchCreatedBefore(searchQuery.getCreatedBefore()))
+                .and(matchUpdatedAfter(searchQuery.getUpdatedAfter()))
+                .and(matchUpdatedBefore(searchQuery.getUpdatedBefore()));
     }
 
     private BooleanBuilder buildRequestCondition(SampleSearchRequest request) {

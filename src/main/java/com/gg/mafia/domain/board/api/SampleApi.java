@@ -5,7 +5,7 @@ import com.gg.mafia.domain.board.dto.SampleCreateRequest;
 import com.gg.mafia.domain.board.dto.SampleResponse;
 import com.gg.mafia.domain.board.dto.SampleSearchRequest;
 import com.gg.mafia.domain.board.dto.SampleUpdateRequest;
-import com.gg.mafia.global.common.request.SearchFilter;
+import com.gg.mafia.global.common.request.SearchQuery;
 import com.gg.mafia.global.common.response.ApiResponse;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,10 @@ public class SampleApi {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<Page<SampleResponse>>> search(SampleSearchRequest request, SearchFilter filter,
+    public ResponseEntity<ApiResponse<Page<SampleResponse>>> search(SampleSearchRequest request,
+                                                                    SearchQuery searchQuery,
                                                                     @PageableDefault Pageable pageable) {
-        Page<SampleResponse> result = sampleService.search(request, filter, pageable);
+        Page<SampleResponse> result = sampleService.search(request, searchQuery, pageable);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 

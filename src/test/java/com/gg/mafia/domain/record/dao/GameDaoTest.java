@@ -5,9 +5,9 @@ import com.gg.mafia.domain.record.domain.Game;
 import com.gg.mafia.domain.record.domain.GameParticipation;
 import com.gg.mafia.domain.record.domain.GameRound;
 import com.gg.mafia.domain.record.domain.JobEnum;
-import com.gg.mafia.domain.record.dto.GameSearchRequest;
 import com.gg.mafia.domain.record.dto.ActionSuccessCountDto;
-import com.gg.mafia.global.common.request.SearchFilter;
+import com.gg.mafia.domain.record.dto.GameSearchRequest;
+import com.gg.mafia.global.common.request.SearchQuery;
 import com.gg.mafia.global.config.AppConfig;
 import com.gg.mafia.global.config.auditing.AuditingConfig;
 import com.gg.mafia.global.config.db.TestDbConfig;
@@ -80,9 +80,9 @@ public class GameDaoTest {
         GameSearchRequest request = GameSearchRequest.builder()
                 .mafiaWon(true)
                 .build();
-        SearchFilter filter = SearchFilter.builder().build();
+        SearchQuery searchQuery = SearchQuery.builder().build();
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Game> mafiaWonGames = gameDao.search(request, filter, pageable);
+        Page<Game> mafiaWonGames = gameDao.search(request, searchQuery, pageable);
         int mafiaWonCountFromDb = (int) mafiaWonGames.stream().filter(Game::getMafiaWon).count();
 
         // Then
@@ -102,9 +102,9 @@ public class GameDaoTest {
         GameSearchRequest request = GameSearchRequest.builder()
                 .roundGte(3)
                 .build();
-        SearchFilter filter = SearchFilter.builder().build();
+        SearchQuery searchQuery = SearchQuery.builder().build();
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Game> mafiaWonGames = gameDao.search(request, filter, pageable);
+        Page<Game> mafiaWonGames = gameDao.search(request, searchQuery, pageable);
         int matchCountFromDb = (int) mafiaWonGames.stream().filter(condition).count();
 
         // Then
@@ -128,9 +128,9 @@ public class GameDaoTest {
         GameSearchRequest request = GameSearchRequest.builder()
                 .userId(user.getId())
                 .build();
-        SearchFilter filter = SearchFilter.builder().build();
+        SearchQuery searchQuery = SearchQuery.builder().build();
         Pageable pageable = PageRequest.of(0, 10);
-        List<Game> playedGamesFromDb = gameDao.search(request, filter, pageable)
+        List<Game> playedGamesFromDb = gameDao.search(request, searchQuery, pageable)
                 .get()
                 .toList();
 
@@ -191,7 +191,7 @@ public class GameDaoTest {
                 .job(JobEnum.MAFIA)
                 .votedPlayerId(user.getId())
                 .build();
-        Long votedGamesFromDb = gameDao.searchForCount(request, SearchFilter.builder().build());
+        Long votedGamesFromDb = gameDao.searchForCount(request, SearchQuery.builder().build());
 
         // Then
         Assertions.assertThat(votedGamesFromDb).isEqualTo(votedGames);
@@ -217,7 +217,7 @@ public class GameDaoTest {
                 .job(JobEnum.MAFIA)
                 .survival(true)
                 .build();
-        Long survivedGamesFromDb = gameDao.searchForCount(request, SearchFilter.builder().build());
+        Long survivedGamesFromDb = gameDao.searchForCount(request, SearchQuery.builder().build());
 
         // Then
         Assertions.assertThat(survivedGamesFromDb).isEqualTo(survivedGames);
@@ -250,7 +250,7 @@ public class GameDaoTest {
                 .job(JobEnum.MAFIA)
                 .detectedPlayerId(user.getId())
                 .build();
-        Long detectedGamesFromDb = gameDao.searchForCount(request, SearchFilter.builder().build());
+        Long detectedGamesFromDb = gameDao.searchForCount(request, SearchQuery.builder().build());
 
         // Then
         Assertions.assertThat(detectedGamesFromDb).isEqualTo(detectedGames);

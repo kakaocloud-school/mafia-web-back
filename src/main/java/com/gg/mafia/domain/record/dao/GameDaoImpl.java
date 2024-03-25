@@ -5,11 +5,11 @@ import com.gg.mafia.domain.record.domain.JobEnum;
 import com.gg.mafia.domain.record.domain.QGame;
 import com.gg.mafia.domain.record.domain.QGameParticipation;
 import com.gg.mafia.domain.record.domain.QGameRound;
+import com.gg.mafia.domain.record.dto.ActionSuccessCountDto;
 import com.gg.mafia.domain.record.dto.GameParticipationSubQueryDto;
 import com.gg.mafia.domain.record.dto.GameRoundSubQueryDto;
 import com.gg.mafia.domain.record.dto.GameSearchRequest;
-import com.gg.mafia.domain.record.dto.ActionSuccessCountDto;
-import com.gg.mafia.global.common.request.SearchFilter;
+import com.gg.mafia.global.common.request.SearchQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -27,12 +27,12 @@ import org.springframework.lang.NonNull;
 public class GameDaoImpl implements GameDaoCustom {
     private final JPAQueryFactory queryFactory;
 
-    public Long searchForCount(GameSearchRequest request, SearchFilter filter) {
+    public Long searchForCount(GameSearchRequest request, SearchQuery searchQuery) {
         QGame game = QGame.game;
         Long count = queryFactory
                 .select(game.count())
                 .from(game)
-                .where(buildSearchCondition(filter), buildRequestCondition(request))
+                .where(buildSearchCondition(searchQuery), buildRequestCondition(request))
                 .fetchOne();
         if (count == null) {
             count = 0L;
@@ -40,15 +40,15 @@ public class GameDaoImpl implements GameDaoCustom {
         return count;
     }
 
-    public Page<Game> search(GameSearchRequest request, SearchFilter filter, @NonNull Pageable pageable) {
+    public Page<Game> search(GameSearchRequest request, SearchQuery searchQuery, @NonNull Pageable pageable) {
         QGame game = QGame.game;
         List<Game> games = queryFactory
                 .selectFrom(game)
-                .where(buildSearchCondition(filter), buildRequestCondition(request))
+                .where(buildSearchCondition(searchQuery), buildRequestCondition(request))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
-        Long count = searchForCount(request, filter);
+        Long count = searchForCount(request, searchQuery);
         return new PageImpl<>(games, pageable, count);
     }
 
@@ -78,12 +78,12 @@ public class GameDaoImpl implements GameDaoCustom {
                 .fetchOne();
     }
 
-    private BooleanBuilder buildSearchCondition(SearchFilter filter) {
+    private BooleanBuilder buildSearchCondition(SearchQuery searchQuery) {
         return new BooleanBuilder()
-                .and(matchCreatedAfter(filter.getCreatedAfter()))
-                .and(matchCreatedBefore(filter.getCreatedBefore()))
-                .and(matchUpdatedAfter(filter.getUpdatedAfter()))
-                .and(matchUpdatedBefore(filter.getUpdatedBefore()));
+                .and(matchCreatedAfter(searchQuery.getCreatedAfter()))
+                .and(matchCreatedBefore(searchQuery.getCreatedBefore()))
+                .and(matchUpdatedAfter(searchQuery.getUpdatedAfter()))
+                .and(matchUpdatedBefore(searchQuery.getUpdatedBefore()));
     }
 
     private BooleanBuilder buildRequestCondition(GameSearchRequest request) {
