@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchFilter {
+public class SearchQuery {
     private String keyword;
     private LocalDateTime createdAfter;
     private LocalDateTime createdBefore;
