@@ -2,6 +2,7 @@ package com.gg.mafia.domain.record.dao;
 
 import com.gg.mafia.domain.record.domain.Game;
 import com.gg.mafia.domain.record.dto.GameSearchRequest;
+import com.gg.mafia.domain.record.dto.ActionSuccessCountDto;
 import com.gg.mafia.global.common.request.SearchFilter;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,13 @@ public interface GameDao extends JpaRepository<Game, Long>, GameDaoCustom {
     Page<Game> findAll(@NonNull Pageable pageable);
 
     @Override
+    Long searchForCount(GameSearchRequest request, SearchFilter filter);
+
+    @Override
     Page<Game> search(GameSearchRequest request, SearchFilter filter, @NonNull Pageable pageable);
+
+    @Override
+    Integer getActionSuccessCount(ActionSuccessCountDto dto);
 
     @Override
     @NonNull

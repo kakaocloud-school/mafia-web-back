@@ -1,5 +1,8 @@
 package com.gg.mafia.domain.record.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.gg.mafia.domain.record.domain.JobEnum;
+import com.gg.mafia.domain.record.domain.JobEnumDeserializer;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,4 +42,17 @@ public class GameSearchRequest {
     private Integer detectSuccessCountLte;
 
     private Long userId;
+
+    private Boolean survival;
+
+    @JsonDeserialize(using = JobEnumDeserializer.class)
+    private JobEnum job;
+
+    private Long votedPlayerId;
+
+    private Long killedPlayerId;
+
+    private Long curedPlayerId;
+
+    private Long detectedPlayerId;
 }

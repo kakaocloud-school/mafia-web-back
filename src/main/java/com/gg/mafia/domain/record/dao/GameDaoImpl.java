@@ -1,12 +1,18 @@
 package com.gg.mafia.domain.record.dao;
 
 import com.gg.mafia.domain.record.domain.Game;
+import com.gg.mafia.domain.record.domain.JobEnum;
 import com.gg.mafia.domain.record.domain.QGame;
 import com.gg.mafia.domain.record.domain.QGameParticipation;
+import com.gg.mafia.domain.record.domain.QGameRound;
+import com.gg.mafia.domain.record.dto.GameParticipationSubQueryDto;
+import com.gg.mafia.domain.record.dto.GameRoundSubQueryDto;
 import com.gg.mafia.domain.record.dto.GameSearchRequest;
+import com.gg.mafia.domain.record.dto.ActionSuccessCountDto;
 import com.gg.mafia.global.common.request.SearchFilter;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,14 +27,8 @@ import org.springframework.lang.NonNull;
 public class GameDaoImpl implements GameDaoCustom {
     private final JPAQueryFactory queryFactory;
 
-    public Page<Game> search(GameSearchRequest request, SearchFilter filter, @NonNull Pageable pageable) {
+    public Long searchForCount(GameSearchRequest request, SearchFilter filter) {
         QGame game = QGame.game;
-        List<Game> games = queryFactory
-                .selectFrom(game)
-                .where(buildSearchCondition(filter), buildRequestCondition(request))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
         Long count = queryFactory
                 .select(game.count())
                 .from(game)
@@ -37,7 +37,45 @@ public class GameDaoImpl implements GameDaoCustom {
         if (count == null) {
             count = 0L;
         }
+        return count;
+    }
+
+    public Page<Game> search(GameSearchRequest request, SearchFilter filter, @NonNull Pageable pageable) {
+        QGame game = QGame.game;
+        List<Game> games = queryFactory
+                .selectFrom(game)
+                .where(buildSearchCondition(filter), buildRequestCondition(request))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+        Long count = searchForCount(request, filter);
         return new PageImpl<>(games, pageable, count);
+    }
+
+    public Integer getActionSuccessCount(ActionSuccessCountDto dto) {
+        QGame game = QGame.game;
+        JobEnum actionBy = dto.getActionBy();
+        NumberPath<Integer> targetCount;
+        if (actionBy.equals(JobEnum.MAFIA)) {
+            targetCount = game.killSuccessCount;
+        } else if (actionBy.equals(JobEnum.DOCTOR)) {
+            targetCount = game.cureSuccessCount;
+        } else if (actionBy.equals(JobEnum.POLICE)) {
+            targetCount = game.detectSuccessCount;
+        } else {
+            throw new IllegalArgumentException();
+        }
+
+        GameParticipationSubQueryDto gameParticipationSubQueryDto = GameParticipationSubQueryDto.builder()
+                .userId(dto.getUserId())
+                .job(dto.getJob())
+                .build();
+
+        return queryFactory
+                .select(targetCount.sum())
+                .from(game)
+                .where(buildGameParticipationSubQuery(gameParticipationSubQueryDto))
+                .fetchOne();
     }
 
     private BooleanBuilder buildSearchCondition(SearchFilter filter) {
@@ -49,6 +87,18 @@ public class GameDaoImpl implements GameDaoCustom {
     }
 
     private BooleanBuilder buildRequestCondition(GameSearchRequest request) {
+        GameParticipationSubQueryDto gameParticipationSubQueryDto = GameParticipationSubQueryDto.builder()
+                .job(request.getJob())
+                .userId(request.getUserId())
+                .survival(request.getSurvival())
+                .build();
+        GameRoundSubQueryDto gameRoundSubQueryDto = GameRoundSubQueryDto.builder()
+                .votedPlayerId(request.getVotedPlayerId())
+                .killedPlayerId(request.getKilledPlayerId())
+                .curedPlayerId(request.getCuredPlayerId())
+                .detectedPlayerId(request.getDetectedPlayerId())
+                .build();
+
         return new BooleanBuilder()
                 .and(matchRoundGte(request.getRoundGte()))
                 .and(matchRoundLte(request.getRoundLte()))
@@ -61,7 +111,49 @@ public class GameDaoImpl implements GameDaoCustom {
                 .and(matchDetectSuccessCountLte(request.getDetectSuccessCountLte()))
                 .and(matchCreatedAt(request.getCreatedAt()))
                 .and(matchUpdatedAt(request.getUpdatedAt()))
-                .and(matchUserId(request.getUserId()));
+                .and(buildGameParticipationSubQuery(gameParticipationSubQueryDto))
+                .and(buildGameRoundSubQuery(gameRoundSubQueryDto));
+    }
+
+    private BooleanExpression buildGameParticipationSubQuery(GameParticipationSubQueryDto request) {
+        QGame game = QGame.game;
+        QGameParticipation gameParticipation = QGameParticipation.gameParticipation;
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder()
+                .and(matchUserId(request.getUserId()))
+                .and(matchJob(request.getJob()))
+                .and(matchSurvival(request.getSurvival()));
+        if (!booleanBuilder.hasValue()) {
+            return null;
+        }
+
+        return game.id.in(
+                queryFactory
+                        .select(gameParticipation.game.id)
+                        .from(gameParticipation)
+                        .where(booleanBuilder)
+        );
+    }
+
+    private BooleanExpression buildGameRoundSubQuery(GameRoundSubQueryDto request) {
+        QGame game = QGame.game;
+        QGameRound gameRound = QGameRound.gameRound;
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder()
+                .and(matchVotedPlayerId(request.getVotedPlayerId()))
+                .and(matchKilledPlayerId(request.getKilledPlayerId()))
+                .and(matchCuredPlayerId(request.getCuredPlayerId()))
+                .and(matchDetectedPlayerId(request.getDetectedPlayerId()));
+        if (!booleanBuilder.hasValue()) {
+            return null;
+        }
+
+        return game.id.in(
+                queryFactory
+                        .select(gameRound.game.id)
+                        .from(gameRound)
+                        .where(booleanBuilder)
+        );
     }
 
     private BooleanExpression matchRoundGte(Integer roundGte) {
@@ -198,13 +290,55 @@ public class GameDaoImpl implements GameDaoCustom {
         if (userId == null) {
             return null;
         }
-        QGame game = QGame.game;
         QGameParticipation gameParticipation = QGameParticipation.gameParticipation;
-        return game.id.in(
-                queryFactory
-                        .select(gameParticipation.game.id)
-                        .from(gameParticipation)
-                        .where(gameParticipation.user.id.eq(userId))
-        );
+        return gameParticipation.user.id.eq(userId);
+    }
+
+    private BooleanExpression matchJob(JobEnum job) {
+        if (job == null) {
+            return null;
+        }
+        QGameParticipation gameParticipation = QGameParticipation.gameParticipation;
+        return gameParticipation.job.eq(job);
+    }
+
+    private BooleanExpression matchSurvival(Boolean survival) {
+        if (survival == null) {
+            return null;
+        }
+        QGameParticipation gameParticipation = QGameParticipation.gameParticipation;
+        return gameParticipation.survival.eq(survival);
+    }
+
+    private BooleanExpression matchVotedPlayerId(Long votedPlayerId) {
+        if (votedPlayerId == null) {
+            return null;
+        }
+        QGameRound gameRound = QGameRound.gameRound;
+        return gameRound.votedPlayer.id.eq(votedPlayerId);
+    }
+
+    private BooleanExpression matchKilledPlayerId(Long killedPlayerId) {
+        if (killedPlayerId == null) {
+            return null;
+        }
+        QGameRound gameRound = QGameRound.gameRound;
+        return gameRound.killedPlayer.id.eq(killedPlayerId);
+    }
+
+    private BooleanExpression matchCuredPlayerId(Long curedPlayerId) {
+        if (curedPlayerId == null) {
+            return null;
+        }
+        QGameRound gameRound = QGameRound.gameRound;
+        return gameRound.curedPlayer.id.eq(curedPlayerId);
+    }
+
+    private BooleanExpression matchDetectedPlayerId(Long matchDetectedPlayerId) {
+        if (matchDetectedPlayerId == null) {
+            return null;
+        }
+        QGameRound gameRound = QGameRound.gameRound;
+        return gameRound.curedPlayer.id.eq(matchDetectedPlayerId);
     }
 }
