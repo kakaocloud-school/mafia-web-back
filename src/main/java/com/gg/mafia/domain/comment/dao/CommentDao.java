@@ -16,7 +16,7 @@ public interface CommentDao extends JpaRepository<Comment, Long> {
 
     @Override
     @NonNull
-    Optional<Comment> findById(@NonNull Long id);
+    static Optional<Comment> findById(@NonNull Long id);
 
 
     @NonNull
