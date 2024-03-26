@@ -1,6 +1,6 @@
 package com.gg.mafia.infra.smtp;
 
-import com.gg.mafia.domain.member.application.ThrottlingService;
+import com.gg.mafia.infra.throttling.ThrottlingManager;
 import com.gg.mafia.domain.member.exception.MailServerException;
 import com.gg.mafia.domain.member.exception.RequestThrottlingException;
 import java.io.UnsupportedEncodingException;
@@ -18,8 +18,7 @@ import org.springframework.stereotype.Component;
 public class SmtpMailSender {
     @Autowired
     private JavaMailSender mailSender;
-    @Autowired
-    private ThrottlingService throttlingService;
+    private ThrottlingManager throttlingManager = new ThrottlingManager();
 
     private final Environment env;
 
@@ -36,7 +35,7 @@ public class SmtpMailSender {
             helper.setTo(toMail);//이메일의 수신자 주소 설정
             helper.setSubject(title);//이메일의 제목을 설정
             helper.setText(content,true);//이메일의 내용 설정 두 번째 매개 변수에 true를 설정하여 html 설정으로한다.
-            if(throttlingService.allowRequest(clientIP)){
+            if(throttlingManager.allowRequest(clientIP)){
                 mailSender.send(message);
             }else{
                 throw new RequestThrottlingException("ip - "+clientIP+"= too many request");

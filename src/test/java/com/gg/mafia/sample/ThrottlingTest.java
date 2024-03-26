@@ -3,7 +3,7 @@ package com.gg.mafia.sample;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.gg.mafia.domain.member.application.ThrottlingService;
+import com.gg.mafia.infra.throttling.ThrottlingManager;
 import io.github.bucket4j.Bucket;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 @Slf4j
 public class ThrottlingTest {
-    private ThrottlingService throttlingService = new ThrottlingService();
+    private ThrottlingManager throttlingManager = new ThrottlingManager();
 
 
     @Test
@@ -36,7 +36,7 @@ public class ThrottlingTest {
                 String clientIP = clientIPs[index];
                 for (int j = 0; j < requestCount; j++) {
 
-                    boolean allowed = throttlingService.allowRequest(clientIP);
+                    boolean allowed = throttlingManager.allowRequest(clientIP);
                     log.debug("요청IP : " + clientIP + " 전송 여부 :  " + allowed);
 
                     if (allowed) trueCount[index]++;
@@ -53,7 +53,7 @@ public class ThrottlingTest {
             log.debug("요청IP :" + clientIPs[i] + " 전송 성공 : " + trueCount[i]+"회");
             log.debug("요청IP :" + clientIPs[i] + " 전송 실패 : " + falseCount[i]+"회");
 
-            assertEquals(throttlingService.getMAxIpBuckets(), trueCount[i]);
+            assertEquals(throttlingManager.getMAxIpBuckets(), trueCount[i]);
         }
     }
 
@@ -76,7 +76,7 @@ public class ThrottlingTest {
                 String clientIP = clientIPs[index];
                 for (int j = 0; j < requestCount; j++) {
 
-                    boolean allowed = throttlingService.allowRequest(clientIP);
+                    boolean allowed = throttlingManager.allowRequest(clientIP);
                     log.debug("요청IP : " + clientIP + " 전송 여부 :  " + allowed);
 
                     try {
@@ -108,18 +108,18 @@ public class ThrottlingTest {
     @Test
     public void testBucketRemoval() {
         // 버킷 수가 MAX_BUCKETS를 초과하도록 설정
-        for (int i = 0; i < throttlingService.getMaxTotalBuckets()+11; i++) {
-            throttlingService.allowRequest("192.168.1." + i);
-            log.debug("버켓사이즈: "+ throttlingService.getBuckets().size());
+        for (int i = 0; i < throttlingManager.getMaxTotalBuckets()+11; i++) {
+            throttlingManager.allowRequest("192.168.1." + i);
+            log.debug("버켓사이즈: "+ throttlingManager.getBuckets().size());
         }
 
-        for (Map.Entry<String, Bucket> entry : throttlingService.getBuckets().entrySet()) {
+        for (Map.Entry<String, Bucket> entry : throttlingManager.getBuckets().entrySet()) {
             String ipAddress = entry.getKey();
 
             log.debug("버킷에 저장된 IP 주소: " + ipAddress);
         }
         // 버킷이 제대로 삭제되었는지 확인
-        assertTrue(throttlingService.getBuckets().size() <= 100);
+        assertTrue(throttlingManager.getBuckets().size() <= 100);
     }
 
 
