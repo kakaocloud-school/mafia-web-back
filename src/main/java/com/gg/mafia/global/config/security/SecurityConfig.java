@@ -48,7 +48,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/"),
                 new AntPathRequestMatcher("/member/authenticate"),
                 new AntPathRequestMatcher("/member/signup"),
-                new AntPathRequestMatcher("/profile/**"),
+                // /profile/**로후에바꾸기
+                new AntPathRequestMatcher("/users/**"),
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests

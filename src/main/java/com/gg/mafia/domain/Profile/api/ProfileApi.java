@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -53,25 +57,34 @@ public class ProfileApi {
 
     //마피아 승률로 모든유저 정렬
     @GetMapping(value = "/mafiaRank")
-    public Page<ProfileResponse> allUsersWithMO(@PathVariable("page") int page) {
+    public Page<ProfileResponse> allUsersWithMO(Pageable pageble) {
+        Sort sort = Sort.by(Direction.DESC, "mafiaOdd");
+        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
         return profileService.getAllUserWithMafiaOdd(page);
     }
 
     //의사 승률로 모든유저 정렬
     @GetMapping(value = "/doctorRank")
-    public Page<ProfileResponse> allUsersWithDO(@PathVariable("page") int page) {
+    public Page<ProfileResponse> allUsersWithDO(Pageable pageble)
+    {
+        Sort sort = Sort.by(Direction.DESC, "doctorOdd");
+        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
         return profileService.getAllUserWithDoctorOdd(page);
     }
 
     //경찰 승률로 모든유저 정렬
     @GetMapping(value = "/policeRank")
-    public Page<ProfileResponse> allUsersWithPO(@PathVariable("page") int page) {
+    public Page<ProfileResponse> allUsersWithPO(Pageable pageble) {
+        Sort sort = Sort.by(Direction.DESC, "policeOdd");
+        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
         return profileService.getAllUserWithPoliceOdd(page);
     }
 
     //시민 승률로 모든 유저 정렬
     @GetMapping(value = "/citizenRank")
-    public Page<ProfileResponse> allUsersWithCO(@PathVariable("page") int page) {
+    public Page<ProfileResponse> allUsersWithCO(Pageable pageble) {
+        Sort sort = Sort.by(Direction.DESC, "citizenOdd");
+        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
         return profileService.getAllUserWithCitizenOdd(page);
     }
 

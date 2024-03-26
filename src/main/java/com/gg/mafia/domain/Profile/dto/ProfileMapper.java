@@ -7,6 +7,7 @@ import com.gg.mafia.domain.member.domain.User;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -14,6 +15,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProfileMapper {
@@ -37,7 +39,16 @@ public interface ProfileMapper {
     }
 
     @Mapping(source = "user.id", target = "userId")
-    Page<ProfileResponse> toProfileResponsePage(Page<ProfileEntity> profileEntityList);
+    ProfileResponse entityToResponse(ProfileEntity entity);
+
+    default Page<ProfileResponse> toProfileResponsePage(Page<ProfileEntity> profileEntityPage) {
+        List<ProfileResponse> profileResponses = profileEntityPage.getContent()
+                .stream()
+                .map(this::entityToResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(profileResponses, profileEntityPage.getPageable(), profileEntityPage.getTotalElements());
+    }
 
     @Autowired
     UserDao userdao = null;

@@ -66,33 +66,25 @@ public class ProfileService {
     }
 
     // 모든 유저의 프로필을 마피아 승률별 오름차순정렬해서 가져옴
-    public Page<ProfileResponse> getAllUserWithMafiaOdd(int page) {
-        Sort sort = Sort.by(Direction.DESC, "mafiaOdd");
-        Pageable pageable = PageRequest.of(page, 10, sort);
+    public Page<ProfileResponse> getAllUserWithMafiaOdd(Pageable pageable) {
         Page<ProfileEntity> profileList = profileDao.findAll(pageable);
         this.oddUpdate(profileList);
         return profileMapper.toProfileResponsePage(profileList);
     }
 
-    public Page<ProfileResponse> getAllUserWithDoctorOdd(int page) {
-        Sort sort = Sort.by(Direction.DESC, "doctorOdd");
-        Pageable pageable = PageRequest.of(page, 10, sort);
+    public Page<ProfileResponse> getAllUserWithDoctorOdd(Pageable pageable) {
         Page<ProfileEntity> profileList = profileDao.findAll(pageable);
         this.oddUpdate(profileList);
         return profileMapper.toProfileResponsePage(profileList);
     }
 
-    public Page<ProfileResponse> getAllUserWithPoliceOdd(int page) {
-        Sort sort = Sort.by(Direction.DESC, "policeOdd");
-        Pageable pageable = PageRequest.of(page, 10, sort);
+    public Page<ProfileResponse> getAllUserWithPoliceOdd(Pageable pageable) {
         Page<ProfileEntity> profileList = profileDao.findAll(pageable);
         this.oddUpdate(profileList);
         return profileMapper.toProfileResponsePage(profileList);
     }
 
-    public Page<ProfileResponse> getAllUserWithCitizenOdd(int page) {
-        Sort sort = Sort.by(Direction.DESC, "citizenOdd");
-        Pageable pageable = PageRequest.of(page, 10, sort);
+    public Page<ProfileResponse> getAllUserWithCitizenOdd(Pageable pageable) {
         Page<ProfileEntity> profileList = profileDao.findAll(pageable);
         this.oddUpdate(profileList);
         return profileMapper.toProfileResponsePage(profileList);
