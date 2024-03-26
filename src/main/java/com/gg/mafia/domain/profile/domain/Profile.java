@@ -21,33 +21,42 @@ import lombok.Setter;
 
 public class Profile extends BaseEntity {
     @Column(nullable = false)
-    private String description;
+    @Builder.Default
+    private String description = "";
 
     @Column(nullable = false)
-    private int rating;
+    @Builder.Default
+    private int rating = 0;
 
     @OneToOne
     @JoinColumn(nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private String userName;
+    @Builder.Default
+    private String userName = "undefined";
 
     @Column(nullable = false)
-    private int ranking;
+    @Builder.Default
+    private int ranking = 0;
 
     @Column(nullable = false)
-    private float mafiaOdd;
+    @Builder.Default
+    private float mafiaOdd = 0;
 
     @Column(nullable = false)
-    private float citizenOdd;
+    @Builder.Default
+    private float citizenOdd = 0;
 
     @Column(nullable = false)
-    private float policeOdd;
+    @Builder.Default
+    private float policeOdd = 0;
 
     @Column(nullable = false)
-    private float doctorOdd;
+    @Builder.Default
+    private float doctorOdd = 0;
 
     @Column(nullable = false)
-    private float averageOdd;
+    @Builder.Default
+    private float averageOdd = 0;
 }
