@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +14,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-
 public class Profile extends BaseEntity {
     @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
-    private int rating;
+    private String description = "안녕하세요";
 
     @OneToOne
     @JoinColumn(nullable = false)
@@ -34,20 +27,34 @@ public class Profile extends BaseEntity {
     private String userName;
 
     @Column(nullable = false)
-    private int ranking;
+    private int rating = 0;
 
     @Column(nullable = false)
-    private float mafiaOdd;
+    private float mafiaWinningRate = 0;
 
     @Column(nullable = false)
-    private float citizenOdd;
+    private float citizenWinningRate = 0;
 
     @Column(nullable = false)
-    private float policeOdd;
+    private float policeWinningRate = 0;
 
     @Column(nullable = false)
-    private float doctorOdd;
+    private float doctorWinningRate = 0;
 
     @Column(nullable = false)
-    private float averageOdd;
+    private float winningRate = 0;
+
+    @Builder
+    public Profile(User user, String userName) {
+        setUser(user);
+        this.userName = userName;
+    }
+
+    private void setUser(User user) {
+        if (this.user != null) {
+            user.setProfile(null);
+        }
+        this.user = user;
+        user.setProfile(this);
+    }
 }
