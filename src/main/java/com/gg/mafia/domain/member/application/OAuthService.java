@@ -6,6 +6,8 @@ import com.gg.mafia.domain.member.dto.OAuthUserDto;
 import com.gg.mafia.domain.member.exception.SignupFailedException;
 import com.gg.mafia.global.config.security.jwt.TokenProvider;
 import com.gg.mafia.global.config.security.oauth.GoogleStrategy;
+import com.gg.mafia.global.config.security.oauth.KakaoStrategy;
+import com.gg.mafia.global.config.security.oauth.NaverStrategy;
 import com.gg.mafia.global.config.security.oauth.OAuthStrategy;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OAuthService {
     private final GoogleStrategy googleStrategy;
+    private final KakaoStrategy kakaoStrategy;
+    private final NaverStrategy naverStrategy;
     private final UserDao userDao;
     private final TokenProvider tokenProvider;
 
@@ -36,6 +40,10 @@ public class OAuthService {
         OAuthStrategy strategy;
         if (oAuthType.equals(OAuthStrategy.GOOGLE)) {
             strategy = googleStrategy;
+        } else if(oAuthType.equals(OAuthStrategy.KAKAO)){
+            strategy = kakaoStrategy;
+        } else if(oAuthType.equals(OAuthStrategy.NAVER)){
+            strategy = naverStrategy;
         } else {
             throw new IllegalArgumentException("OAuth 타입 불명");
         }
