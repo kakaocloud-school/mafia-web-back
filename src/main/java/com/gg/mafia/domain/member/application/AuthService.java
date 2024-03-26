@@ -33,12 +33,10 @@ public class AuthService {
 
         User user = userMapper.toEntity(request);
 
-        Profile profile = Profile.builder()
+        Profile.builder()
                 .user(user)
                 .userName(request.getNickname())
                 .build();
-
-        user.setProfile(profile);
 
         userDao.save(user);
 
