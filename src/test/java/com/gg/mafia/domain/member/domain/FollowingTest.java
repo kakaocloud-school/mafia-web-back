@@ -37,9 +37,9 @@ class FollowingTest {
     private EntityManager em;
     private Following following;
     private List<Following> followingList;
-    private User target1;
-    private User target2;
-    private User source;
+    private User follower1;
+    private User follower2;
+    private User followee;
 
     public FollowingTest() {
         this.rand = new Random();
@@ -50,17 +50,17 @@ class FollowingTest {
         em = emf.createEntityManager();
         em.getTransaction().begin();
 
-        target1 = createUser("target1@naver.com", "123");
-        target2 = createUser("target2@naver.com", "123");
-        source = createUser("source@naver.com", "123");
+        follower1 = createUser("follower1@naver.com", "123");
+        follower2 = createUser("follower2@naver.com", "123");
+        followee = createUser("followee@naver.com", "123");
 
-        em.persist(target1);
-        em.persist(target2);
-        em.persist(source);
+        em.persist(follower1);
+        em.persist(follower2);
+        em.persist(followee);
     }
 
     @AfterEach
-    public void afterAll() {
+    public void afterEach() {
         em.getTransaction().rollback();
         em.clear();
     }
@@ -68,11 +68,10 @@ class FollowingTest {
     @Test
     @DisplayName("Following 생성 테스트")
     public void createFollowing() {
-        Following following = createFollowing(target1, source);
+        Following following = createFollowing(follower1, followee);
 
         em.persist(following);
-
-        Following findFollowing = em.find(Following.class, 1L);
+        Following findFollowing = em.find(Following.class, following.getId());
 
         Assertions.assertThat(findFollowing).isEqualTo(following);
     }
@@ -85,22 +84,22 @@ class FollowingTest {
         for (int i = 1; i < count; i++) {
             User randomUser = createUser(UUID.randomUUID().toString().substring(0, 5), "123");
 
-            Following follow = createFollowing(target1, randomUser);
+            Following follow = createFollowing(follower1, randomUser);
             randomFollowingList.add(follow);
 
             em.persist(follow);
             em.flush();
-            log.info("[create] {} - {}", target1.getEmail(), randomUser.getEmail());
+            log.info("[create] {} - {}", follower1.getEmail(), randomUser.getEmail());
         }
         for (int i = 0; i < randomFollowingList.size(); i++) {
-            em.createQuery("delete from Following f where f.targetUser =:target and f.sourceUser =:source")
-                    .setParameter("target", target1)
-                    .setParameter("source", randomFollowingList.get(i).getSourceUser())
+            em.createQuery("delete from Following f where f.follower =:follower and f.followee =:followee")
+                    .setParameter("follower", follower1)
+                    .setParameter("followee", randomFollowingList.get(i).getFollowee())
                     .executeUpdate();
-            log.info("[remove] {} - {}", target1.getEmail(), randomFollowingList.get(i).getSourceUser().getEmail());
+            log.info("[remove] {} - {}", follower1.getEmail(), randomFollowingList.get(i).getFollowee().getEmail());
         }
-        int countFromDb = em.createQuery("select f from Following f where targetUser =:target")
-                .setParameter("target", target1)
+        int countFromDb = em.createQuery("select f from Following f where follower =:follower")
+                .setParameter("follower", follower1)
                 .getFirstResult();
         Assertions.assertThat(countFromDb).isEqualTo(0);
     }
@@ -115,16 +114,16 @@ class FollowingTest {
             User randomUser = createUser(UUID.randomUUID().toString().substring(0, 5), "123");
             if (count % 2 != 0) {
                 target1_follower++;
-                Following follow = createFollowing(randomUser, target1);
+                Following follow = createFollowing(randomUser, follower1);
                 em.persist(follow);
             } else {
                 target2_follower++;
-                Following follow = createFollowing(randomUser, target1);
+                Following follow = createFollowing(randomUser, follower2);
                 em.persist(follow);
             }
         }
-        List<Following> target1FollowingList = em.createQuery("SELECT f FROM Following f where f.targetUser =:target")
-                .setParameter("target", target1)
+        List<Following> target1FollowingList = em.createQuery("SELECT f FROM Following f where f.followee =:followee")
+                .setParameter("followee", follower1)
                 .getResultList();
         Assertions.assertThat(target1FollowingList.size())
                 .isEqualTo(target1_follower);
@@ -134,7 +133,7 @@ class FollowingTest {
         return User.builder().email(email).password(pw).build();
     }
 
-    private Following createFollowing(User target, User source) {
-        return Following.builder().target(target).source(source).build();
+    private Following createFollowing(User follower, User followee) {
+        return Following.builder().follower(follower).followee(followee).build();
     }
 }

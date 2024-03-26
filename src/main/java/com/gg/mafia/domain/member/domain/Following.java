@@ -17,19 +17,19 @@ import lombok.NoArgsConstructor;
 public class Following extends BaseEntity {
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User targetUser;
+    private User follower;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User sourceUser;
+    private User followee;
 
     @Builder
-    public Following(User target, User source) {
-        this.targetUser = target;
-        this.sourceUser = source;
+    public Following(User follower, User followee) {
+        this.follower = follower;
+        this.followee = followee;
     }
 
-    public static Following relate(User target, User source) {
-        return Following.builder().target(target).source(source).build();
+    public static Following relate(User follower, User followee) {
+        return Following.builder().follower(follower).followee(followee).build();
     }
 }
