@@ -1,6 +1,6 @@
 package com.gg.mafia.infra.smtp;
 
-import com.gg.mafia.infra.throttling.ThrottlingManager;
+import com.gg.mafia.infra.ratelimiter.ThrottlingManager;
 import com.gg.mafia.domain.member.exception.MailServerException;
 import com.gg.mafia.domain.member.exception.RequestThrottlingException;
 import java.io.UnsupportedEncodingException;

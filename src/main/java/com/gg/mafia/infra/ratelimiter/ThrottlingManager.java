@@ -1,4 +1,4 @@
-package com.gg.mafia.infra.throttling;
+package com.gg.mafia.infra.ratelimiter;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import io.github.bucket4j.Bandwidth;

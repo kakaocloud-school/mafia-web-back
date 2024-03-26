@@ -3,7 +3,7 @@ package com.gg.mafia.sample;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.gg.mafia.infra.throttling.ThrottlingManager;
+import com.gg.mafia.infra.ratelimiter.ThrottlingManager;
 import io.github.bucket4j.Bucket;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
