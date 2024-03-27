@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -58,7 +59,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/member/signup"),
                 new AntPathRequestMatcher("/member/sendMail"),
                 new AntPathRequestMatcher("/member/confirmMail"),
-                new AntPathRequestMatcher("/member/oauth-types/**/validate-oauth2-code")
+                new AntPathRequestMatcher("/member/oauth-types/**/validate-oauth2-code"),
+                new AntPathRequestMatcher("/member/ranks/**", HttpMethod.GET.name())
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
