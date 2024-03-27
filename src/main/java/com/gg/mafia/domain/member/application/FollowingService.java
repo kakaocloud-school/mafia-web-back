@@ -17,8 +17,9 @@ public class FollowingService {
     private final UserDao userDao;
 
     @Transactional
-    public void insertFollowing(String followerEmail, String followeeEmail) {
-        followingDao.save(createFollowing(followerEmail, followeeEmail));
+    public Following insertFollowing(String followerEmail, String followeeEmail) {
+        Following following = createFollowing(followerEmail, followeeEmail);
+        return followingDao.save(following);
     }
 
     public List<Following> getFollowees(String followerEmail) {
@@ -26,7 +27,7 @@ public class FollowingService {
     }
 
     public List<Following> getFollowers(String followeeEmail) {
-        return followingDao.findByFollowerId(getUser(followeeEmail).getId());
+        return followingDao.findByFolloweeId(getUser(followeeEmail).getId());
     }
 
     @Transactional
