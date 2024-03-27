@@ -32,17 +32,30 @@ class FollowingDaoTest {
     FollowingDao followingDao;
 
     @Test
-    @DisplayName("Followee 조회 - JPA 메서드")
+    @DisplayName("FolloweeId, FollowerId로 조회 - JPA 메서드")
+    @Transactional
+    public void findByFollowerIdAndFolloweeId_Jpa() {
+        User follower = createUser("follower@naver.com", "123");
+        User followee = createUser("followee@naver.com", "123");
+
+        List<Following> randomFollowingsByFollower = createRandomFollowingsByFollower(follower, 90);
+        randomFollowingsByFollower.add(createFollowing(follower, followee));
+        followingDao.saveAll(randomFollowingsByFollower);
+
+        Following findFollowing = followingDao.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).get();
+
+        Assertions.assertThat(findFollowing.getFollower().getId()).isEqualTo(follower.getId());
+        Assertions.assertThat(findFollowing.getFollowee().getId()).isEqualTo(followee.getId());
+    }
+
+    @Test
+    @DisplayName("FolloweeId로 조회 - JPA 메서드")
     @Transactional
     public void findByFollowee_Jpa() {
-        List<Following> followingList = new ArrayList<>();
         User followee = createUser("followee@naver.com", "123");
-        for (int i = 1; i < 100; i++) {
-            String email = String.format("followee%d@naver.com", i);
-            Following following = createFollowing(createUser(email, "123"), followee);
-            followingList.add(following);
-        }
-        followingDao.saveAll(followingList);
+        List<Following> randomFollowingsByFollowee = createRandomFollowingsByFollowee(followee, 100);
+
+        followingDao.saveAll(randomFollowingsByFollowee);
         long startTime = System.currentTimeMillis();
         List<Following> findFollowingList = followingDao.findByFolloweeId(followee.getId());
         long endTime = System.currentTimeMillis();
@@ -51,17 +64,14 @@ class FollowingDaoTest {
     }
 
     @Test
-    @DisplayName("Followee 조회 - QueryDsl")
+    @DisplayName("FolloweeId로 조회 - QueryDsl")
     @Transactional
     public void findByFollowee_QueryDsl() {
-        List<Following> followingList = new ArrayList<>();
         User followee = createUser("followee@naver.com", "123");
-        for (int i = 1; i < 100; i++) {
-            String email = String.format("followee%d@naver.com", i);
-            Following following = createFollowing(createUser(email, "123"), followee);
-            followingList.add(following);
-        }
-        followingDao.saveAll(followingList);
+        List<Following> randomFollowingsByFollowee = createRandomFollowingsByFollowee(followee, 100);
+
+        followingDao.saveAll(randomFollowingsByFollowee);
+
         long startTime = System.currentTimeMillis();
         List<Following> findFollowingList = followingDao.findByFollowee(followee.getId());
         long endTime = System.currentTimeMillis();
@@ -70,41 +80,55 @@ class FollowingDaoTest {
     }
 
     @Test
-    @DisplayName("Follower 조회 - JPA 메서드")
+    @DisplayName("FollowerId로 조회 - JPA 메서드")
     @Transactional
     public void findByFollower_Jpa() {
-        List<Following> followingList = new ArrayList<>();
         User follower = createUser("follower@naver.com", "123");
-        for (int i = 1; i < 100; i++) {
-            String email = String.format("followee%d@naver.com", i);
-            Following following = createFollowing(follower, createUser(email, "123"));
-            followingList.add(following);
-        }
-        followingDao.saveAll(followingList);
+        int followingCount = 100;
+        List<Following> randomFollowingsByFollower = createRandomFollowingsByFollower(follower, followingCount);
+
+        followingDao.saveAll(randomFollowingsByFollower);
+
         long startTime = System.currentTimeMillis();
         List<Following> findFollowingList = followingDao.findByFollowerId(follower.getId());
         long endTime = System.currentTimeMillis();
         log.info("result Time : {}", endTime - startTime);
-        Assertions.assertThat(findFollowingList.size()).isEqualTo(99);
+        Assertions.assertThat(findFollowingList.size()).isEqualTo(followingCount);
     }
 
     @Test
-    @DisplayName("Follower 조회 - QueryDsl")
+    @DisplayName("FollowerId로 조회 - QueryDsl")
     @Transactional
     public void findByFollower_QueryDsl() {
-        List<Following> followingList = new ArrayList<>();
         User follower = createUser("follower@naver.com", "123");
-        for (int i = 1; i < 100; i++) {
-            String email = String.format("followee%d@naver.com", i);
-            Following following = createFollowing(follower, createUser(email, "123"));
-            followingList.add(following);
-        }
-        followingDao.saveAll(followingList);
+        int followingCount = 100;
+        List<Following> randomFollowingsByFollower = createRandomFollowingsByFollower(follower, followingCount);
+
+        followingDao.saveAll(randomFollowingsByFollower);
         long startTime = System.currentTimeMillis();
         List<Following> findFollowingList = followingDao.findByFollower(follower.getId());
         long endTime = System.currentTimeMillis();
         log.info("result Time : {}", endTime - startTime);
-        Assertions.assertThat(findFollowingList.size()).isEqualTo(99);
+        Assertions.assertThat(findFollowingList.size()).isEqualTo(followingCount);
+    }
+
+    private List<Following> createRandomFollowingsByFollower(User follower, int count) {
+        List<Following> randomFollowingList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            User randomFollowee = createUser(String.format("Followee%d@naver.com", i), "123");
+            randomFollowingList.add(createFollowing(follower, randomFollowee));
+        }
+        return randomFollowingList;
+    }
+
+    private List<Following> createRandomFollowingsByFollowee(User followee, int count) {
+        List<Following> randomFollowingList = new ArrayList<>();
+        for (int i = 1; i < count; i++) {
+            String email = String.format("followee%d@naver.com", i);
+            Following following = createFollowing(createUser(email, "123"), followee);
+            randomFollowingList.add(following);
+        }
+        return randomFollowingList;
     }
 
     private User createUser(String email, String pw) {
