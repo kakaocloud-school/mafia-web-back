@@ -1,4 +1,4 @@
-package com.gg.mafia.domain.member.application;
+package com.gg.mafia.infra.ratelimiter;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import io.github.bucket4j.Bandwidth;
@@ -7,10 +7,8 @@ import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
 import java.time.Duration;
 import java.util.Map;
-import org.springframework.stereotype.Service;
 
-@Service
-public class ThrottlingService {
+public class ThrottlingManager {
     private static final int MAX_TOTAL_BUCKETS = 100; // 최대 버킷 수
 
     private static final int MAX_IP_BUCKETS = 10; // ip당 최대 버킷 수
