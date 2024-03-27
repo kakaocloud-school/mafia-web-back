@@ -64,22 +64,6 @@ class FollowingDaoTest {
     }
 
     @Test
-    @DisplayName("FolloweeId로 조회 - QueryDsl")
-    @Transactional
-    public void findByFollowee_QueryDsl() {
-        User followee = createUser("followee@naver.com", "123");
-        List<Following> randomFollowingsByFollowee = createRandomFollowingsByFollowee(followee, 100);
-
-        followingDao.saveAll(randomFollowingsByFollowee);
-
-        long startTime = System.currentTimeMillis();
-        List<Following> findFollowingList = followingDao.findByFollowee(followee.getId());
-        long endTime = System.currentTimeMillis();
-        log.info("result Time : {}", endTime - startTime);
-        Assertions.assertThat(findFollowingList.size()).isEqualTo(99);
-    }
-
-    @Test
     @DisplayName("FollowerId로 조회 - JPA 메서드")
     @Transactional
     public void findByFollower_Jpa() {
@@ -91,22 +75,6 @@ class FollowingDaoTest {
 
         long startTime = System.currentTimeMillis();
         List<Following> findFollowingList = followingDao.findByFollowerId(follower.getId());
-        long endTime = System.currentTimeMillis();
-        log.info("result Time : {}", endTime - startTime);
-        Assertions.assertThat(findFollowingList.size()).isEqualTo(followingCount);
-    }
-
-    @Test
-    @DisplayName("FollowerId로 조회 - QueryDsl")
-    @Transactional
-    public void findByFollower_QueryDsl() {
-        User follower = createUser("follower@naver.com", "123");
-        int followingCount = 100;
-        List<Following> randomFollowingsByFollower = createRandomFollowingsByFollower(follower, followingCount);
-
-        followingDao.saveAll(randomFollowingsByFollower);
-        long startTime = System.currentTimeMillis();
-        List<Following> findFollowingList = followingDao.findByFollower(follower.getId());
         long endTime = System.currentTimeMillis();
         log.info("result Time : {}", endTime - startTime);
         Assertions.assertThat(findFollowingList.size()).isEqualTo(followingCount);
