@@ -35,7 +35,7 @@ public class AuthApi {
     private final MailService mailService;
 
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Validated SignupRequest request) {
         if(!mailService.confirmMail(request.getEmail(),request.getEmailCode())){
             throw new UserNotAllowedException("인증되지 않은 사용자입니다.");
@@ -50,7 +50,7 @@ public class AuthApi {
         return ResponseEntity.ok().body(ApiResponse.success(result));
     }
 
-    @PostMapping("/sendMail")
+    @PostMapping("/send-mail")
     public ResponseEntity<ApiResponse<String>> sendMail(@RequestBody @Validated SendMailRequest request, HttpServletRequest servletRequest){
         String clientIP = servletRequest.getHeader("X-Forwarded-For");
 
@@ -63,7 +63,7 @@ public class AuthApi {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/confirmMail")
+    @PostMapping("/confirm-mail")
     public ResponseEntity<ApiResponse<Boolean>> confirmMail(@RequestBody @Validated ConfirmMailRequest request){
         Boolean isCodeMatching = mailService.confirmMail(request.getEmail(),request.getEmailCode());
         return ResponseEntity.ok().body(ApiResponse.success(isCodeMatching));
