@@ -2,8 +2,8 @@ package com.gg.mafia.domain.member.api;
 
 import com.gg.mafia.domain.member.application.AuthService;
 import com.gg.mafia.domain.member.application.MailService;
-import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.application.OAuthService;
+import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
@@ -12,6 +12,8 @@ import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +82,8 @@ public class AuthApi {
             String token = oAuthService.signupOrLoginByCode(code, oAuthType);
             response.sendRedirect("%s?token=%s".formatted(redirectUrl, token));
         } catch (Exception e) {
-            response.sendRedirect("%s?error=%s".formatted(redirectUrl, e.getMessage()));
+            String encodedErrorMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+            response.sendRedirect("%s?error=%s".formatted(redirectUrl, encodedErrorMessage));
         }
     }
 }
