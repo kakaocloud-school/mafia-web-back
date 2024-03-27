@@ -2,8 +2,8 @@ package com.gg.mafia.domain.member.api;
 
 import com.gg.mafia.domain.member.application.AuthService;
 import com.gg.mafia.domain.member.application.MailService;
-import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.application.OAuthService;
+import com.gg.mafia.domain.member.dto.ConfirmMailRequest;
 import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SendMailRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
@@ -12,6 +12,8 @@ import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class AuthApi {
     private final MailService mailService;
 
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Validated SignupRequest request) {
         if(!mailService.confirmMail(request.getEmail(),request.getEmailCode())){
             throw new UserNotAllowedException("인증되지 않은 사용자입니다.");
@@ -50,7 +52,7 @@ public class AuthApi {
         return ResponseEntity.ok().body(ApiResponse.success(result));
     }
 
-    @PostMapping("/sendMail")
+    @PostMapping("/send-mail")
     public ResponseEntity<ApiResponse<String>> sendMail(@RequestBody @Validated SendMailRequest request, HttpServletRequest servletRequest){
         String clientIP = servletRequest.getHeader("X-Forwarded-For");
 
@@ -63,7 +65,7 @@ public class AuthApi {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/confirmMail")
+    @PostMapping("/confirm-mail")
     public ResponseEntity<ApiResponse<Boolean>> confirmMail(@RequestBody @Validated ConfirmMailRequest request){
         Boolean isCodeMatching = mailService.confirmMail(request.getEmail(),request.getEmailCode());
         return ResponseEntity.ok().body(ApiResponse.success(isCodeMatching));
@@ -80,7 +82,8 @@ public class AuthApi {
             String token = oAuthService.signupOrLoginByCode(code, oAuthType);
             response.sendRedirect("%s?token=%s".formatted(redirectUrl, token));
         } catch (Exception e) {
-            response.sendRedirect("%s?error=%s".formatted(redirectUrl, e.getMessage()));
+            String encodedErrorMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+            response.sendRedirect("%s?error=%s".formatted(redirectUrl, encodedErrorMessage));
         }
     }
 }
