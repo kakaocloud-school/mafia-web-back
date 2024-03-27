@@ -1,12 +1,12 @@
-package com.gg.mafia.domain.Profile.application;
+package com.gg.mafia.domain.profile.application;
 
 import static java.lang.Math.ceil;
 
-import com.gg.mafia.domain.Profile.dao.ProfileDao;
-import com.gg.mafia.domain.Profile.domain.ProfileEntity;
-import com.gg.mafia.domain.Profile.dto.ProfileMapper;
-import com.gg.mafia.domain.Profile.dto.ProfileRequest;
-import com.gg.mafia.domain.Profile.dto.ProfileResponse;
+import com.gg.mafia.domain.profile.dao.ProfileDao;
+import com.gg.mafia.domain.profile.domain.ProfileEntity;
+import com.gg.mafia.domain.profile.dto.ProfileMapper;
+import com.gg.mafia.domain.profile.dto.ProfileRequest;
+import com.gg.mafia.domain.profile.dto.ProfileResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Comparator;
 import java.util.List;
@@ -133,7 +133,7 @@ public class ProfileService {
         float p = profile.getPoliceOdd();
         float oddsAverage = (c + m + d + p) / 4;
         profile.setAverageOdd(oddsAverage);
-        profileDao.save(profile);
+            profileDao.save(profile);
     }
 
 

@@ -1,7 +1,6 @@
-package com.gg.mafia.domain.Profile.dto;
+package com.gg.mafia.domain.profile.dto;
 
-import com.gg.mafia.domain.Profile.dao.ProfileDao;
-import com.gg.mafia.domain.Profile.domain.ProfileEntity;
+import com.gg.mafia.domain.profile.domain.ProfileEntity;
 import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,7 +11,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

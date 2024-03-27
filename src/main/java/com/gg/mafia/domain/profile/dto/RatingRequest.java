@@ -1,4 +1,4 @@
-package com.gg.mafia.domain.Profile.dto;
+package com.gg.mafia.domain.profile.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,15 +1,12 @@
-package com.gg.mafia.domain.Profile.dto;
+package com.gg.mafia.domain.profile.dto;
 
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
-@Builder
-public class ProfileResponse {
+public class ProfileRequest {
     private Long id;
+    @NotBlank
     private Long userId;
     private String userName;
     private String description;

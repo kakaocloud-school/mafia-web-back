@@ -1,11 +1,9 @@
-package com.gg.mafia.domain.Profile.api;
+package com.gg.mafia.domain.profile.api;
 
-import com.gg.mafia.domain.Profile.application.ProfileService;
-import com.gg.mafia.domain.Profile.dto.ProfileRequest;
-import com.gg.mafia.domain.Profile.dto.ProfileResponse;
-import com.gg.mafia.domain.Profile.dto.RatingRequest;
-import java.util.List;
-import java.util.Map;
+import com.gg.mafia.domain.profile.application.ProfileService;
+import com.gg.mafia.domain.profile.dto.ProfileRequest;
+import com.gg.mafia.domain.profile.dto.ProfileResponse;
+import com.gg.mafia.domain.profile.dto.RatingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

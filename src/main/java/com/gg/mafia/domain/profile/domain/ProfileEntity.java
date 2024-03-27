@@ -1,4 +1,4 @@
-package com.gg.mafia.domain.Profile.domain;
+package com.gg.mafia.domain.profile.domain;
 
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.model.BaseEntity;
