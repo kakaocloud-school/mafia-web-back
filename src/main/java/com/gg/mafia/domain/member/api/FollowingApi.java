@@ -31,7 +31,7 @@ public class FollowingApi {
     @GetMapping("/follow/followers")
     public ResponseEntity<ApiResponse<List<Following>>> showFollowers(Principal principal,
                                                                       @RequestParam String email) {
-        List<Following> followees = followingService.getFollowees(email);
+        List<Following> followees = followingService.getFollowers(email);
         return ResponseEntity.ok(ApiResponse.success(followees));
     }
 
