@@ -29,7 +29,6 @@ public class NaverStrategy implements OAuthStrategy{
         requestBody.add("client_id", env.getProperty("naver.client-id"));
         requestBody.add("client_secret", env.getProperty("naver.client-secret"));
         requestBody.add("code", code);
-        requestBody.add("state", "test");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, headers);
 
