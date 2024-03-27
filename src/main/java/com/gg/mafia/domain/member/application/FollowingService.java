@@ -17,28 +17,36 @@ public class FollowingService {
     private final UserDao userDao;
 
     @Transactional
-    public void insertFollowing(Long followerId, Long followeeId) {
-        followingDao.save(createFollowing(followerId, followeeId));
+    public void insertFollowing(String followerEmail, String followeeEmail) {
+        followingDao.save(createFollowing(followerEmail, followeeEmail));
     }
 
-    public List<Following> getFollowees(Long followerId) {
-        return followingDao.findByFollowerId(followerId);
+    public List<Following> getFollowees(String followerEmail) {
+        return followingDao.findByFollowerId(getUser(followerEmail).getId());
     }
 
-    public List<Following> getFollowers(Long followeeId) {
-        return followingDao.findByFollowerId(followeeId);
+    public List<Following> getFollowers(String followeeEmail) {
+        return followingDao.findByFollowerId(getUser(followeeEmail).getId());
     }
 
     @Transactional
-    public void removeFollowee(Long followerId, Long followeeId) {
+    public void removeFollowee(String followerEmail, String followeeEmail) {
+        Long followerId = getUser(followerEmail).getId();
+        Long followeeId = getUser(followeeEmail).getId();
+
         Following following = followingDao.findByFollowerIdAndFolloweeId(followerId, followeeId)
                 .orElseThrow(() -> new IllegalArgumentException());
+
         followingDao.delete(following);
     }
 
-    private Following createFollowing(Long followerId, Long followeeId) {
-        User follower = userDao.findById(followerId).orElseThrow(() -> new IllegalArgumentException());
-        User followee = userDao.findById(followeeId).orElseThrow(() -> new IllegalArgumentException());
+    private User getUser(String userEmail) {
+        return userDao.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException());
+    }
+
+    private Following createFollowing(String followerEmail, String followeeEmail) {
+        User follower = getUser(followerEmail);
+        User followee = getUser(followeeEmail);
 
         return Following.builder().follower(follower).followee(followee).build();
     }
