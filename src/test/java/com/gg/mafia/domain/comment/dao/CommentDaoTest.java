@@ -134,7 +134,7 @@ class CommentDaoTest {
         user = createUser(email, pw);
         profile = createProfile(user, userName);
 
-        return Comment.builder().user(user).profile(profile).comment(comment).build();
+        return Comment.builder().user(user).profile(profile).content(comment).build();
     }
 
     private Profile createProfile(User user, String userName) {
