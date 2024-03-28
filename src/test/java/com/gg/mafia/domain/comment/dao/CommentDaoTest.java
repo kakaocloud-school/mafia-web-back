@@ -64,7 +64,7 @@ class CommentDaoTest {
     public void findByUserIdTest() {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
-        Comment findComment = commentDao.findByUserId(comment.getUser().getId());
+        Comment findComment = commentDao.findByUserId(comment.getUser().getId()).get();
 
         Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
     }
@@ -75,7 +75,7 @@ class CommentDaoTest {
     public void findByProfileIdTest() {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
-        Comment findComment = commentDao.findByProfileId(comment.getProfile().getId());
+        Comment findComment = commentDao.findByProfileId(comment.getProfile().getId()).get();
 
         Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
     }
@@ -87,7 +87,7 @@ class CommentDaoTest {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
         Comment findComment = commentDao.findByUserIdAndProfileId(comment.getUser().getId(),
-                comment.getProfile().getId());
+                comment.getProfile().getId()).get();
 
         Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
     }
