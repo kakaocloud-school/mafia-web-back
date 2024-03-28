@@ -27,7 +27,6 @@ public interface ProfileMapper {
 //    @Mapping(source = "userId", target = "user", qualifiedByName = "idToUser")
 //    Profile toEntity(ProfileRequest request);
 
-
 //    @Named("idToUser")
 //    default User idToUser(Long id) {
 //        Optional<User> Ouser = userdao.findById(id);
@@ -48,7 +47,8 @@ public interface ProfileMapper {
 
         return new PageImpl<>(profileResponses, profileEntityPage.getPageable(), profileEntityPage.getTotalElements());
     }
-    ankResponse toRankResponse(Profile profile);
+
+    RankResponse toRankResponse(Profile profile);
 }
 
 

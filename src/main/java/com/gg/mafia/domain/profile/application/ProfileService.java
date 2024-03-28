@@ -41,7 +41,7 @@ public class ProfileService {
                 .forEach(idx -> content.get(idx).setRank(pageable.getOffset() + idx + 1));
         return result;
     }
-}
+
 
 
     private Profile findById(Long id) {
