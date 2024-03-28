@@ -60,14 +60,10 @@ public class ProfileService {
     }
 
     // 모든 유저의 프로필을 마피아 승률별 오름차순정렬해서 가져옴
-    public void descriptionSave(ProfileRequest request) {
-        profileDao.save(profileMapper.toEntity(request));
-    }
 
     public void descriptionUpdate(ProfileRequest request) {
-        Profile profile = findById(request.getId());
+        Profile profile = findById(request.getUserId());
         profile.setDescription(request.getDescription());
-        profile.setDescription(request.getUserName());
         profileDao.save(profile);
     }
 

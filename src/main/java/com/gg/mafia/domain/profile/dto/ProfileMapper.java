@@ -14,6 +14,7 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProfileMapper {
@@ -23,18 +24,18 @@ public interface ProfileMapper {
     ProfileResponse toProfileResponse(Profile profile);
 
     //    @Mapping(target = "user.id", qualifiedByName = "find")
-    @Mapping(source = "userId", target = "user", qualifiedByName = "idToUser")
-    Profile toEntity(ProfileRequest request);
+//    @Mapping(source = "userId", target = "user", qualifiedByName = "idToUser")
+//    Profile toEntity(ProfileRequest request);
 
 
-    @Named("idToUser")
-    default User idToUser(Long id) {
-        Optional<User> Ouser = userdao.findById(id);
-        if (Ouser.isPresent()) {
-            return Ouser.get();
-        }
-        throw new EntityNotFoundException("id에맞는 유저가없음");
-    }
+//    @Named("idToUser")
+//    default User idToUser(Long id) {
+//        Optional<User> Ouser = userdao.findById(id);
+//        if (Ouser.isPresent()) {
+//            return Ouser.get();
+//        }
+//        throw new EntityNotFoundException("id에맞는 유저가없음");
+//    }
 
     @Mapping(source = "user.id", target = "userId")
     ProfileResponse entityToResponse(Profile entity);
@@ -48,8 +49,8 @@ public interface ProfileMapper {
         return new PageImpl<>(profileResponses, profileEntityPage.getPageable(), profileEntityPage.getTotalElements());
     }
 
-    @Autowired
-    UserDao userdao = null;
-
+//    @Autowired
+//    UserDao userdao = null;
+//
 
 }

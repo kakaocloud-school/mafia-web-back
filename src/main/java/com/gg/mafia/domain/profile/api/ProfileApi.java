@@ -31,11 +31,7 @@ public class ProfileApi {
         return profileService.getByUserId(id);
     }
 
-    @PostMapping(value = "{id}/profile")
-    public ResponseEntity<Object> profileCreate(@RequestBody ProfileRequest request) {
-        profileService.descriptionSave(request);
-        return ResponseEntity.ok().build();
-    }
+
 
     @PatchMapping(value = "{id}/profile")
     public ResponseEntity<Object> profileUpdate(@RequestBody ProfileRequest request) {
