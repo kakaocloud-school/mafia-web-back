@@ -48,9 +48,7 @@ public interface ProfileMapper {
 
         return new PageImpl<>(profileResponses, profileEntityPage.getPageable(), profileEntityPage.getTotalElements());
     }
-
-//    @Autowired
-//    UserDao userdao = null;
-//
-
+    ankResponse toRankResponse(Profile profile);
 }
+
+

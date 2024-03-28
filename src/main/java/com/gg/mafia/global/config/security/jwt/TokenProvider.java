@@ -1,4 +1,4 @@
-package com.gg.mafia.global.config.security;
+package com.gg.mafia.global.config.security.jwt;
 
 import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;
@@ -41,13 +41,17 @@ public class TokenProvider {
         this.userMapper = userMapper;
     }
 
-    public String createToken(Authentication authentication) {
+    public String createToken(String email) {
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(email)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(getExpiration())
                 .setIssuedAt(new Date())
                 .compact();
+    }
+
+    public String createToken(Authentication authentication) {
+        return createToken(authentication.getName());
     }
 
     @Transactional

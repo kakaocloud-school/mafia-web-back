@@ -7,7 +7,7 @@ import com.gg.mafia.domain.board.dto.SampleMapper;
 import com.gg.mafia.domain.board.dto.SampleResponse;
 import com.gg.mafia.domain.board.dto.SampleSearchRequest;
 import com.gg.mafia.domain.board.dto.SampleUpdateRequest;
-import com.gg.mafia.global.common.request.SearchFilter;
+import com.gg.mafia.global.common.request.SearchQuery;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class SampleService {
         return sampleDao.findAll(pageable).map(sampleMapper::toResponse);
     }
 
-    public Page<SampleResponse> search(SampleSearchRequest request, SearchFilter filter, Pageable pageable) {
-        return sampleDao.search(request, filter, pageable).map(sampleMapper::toResponse);
+    public Page<SampleResponse> search(SampleSearchRequest request, SearchQuery searchQuery, Pageable pageable) {
+        return sampleDao.search(request, searchQuery, pageable).map(sampleMapper::toResponse);
     }
 
     public SampleResponse getById(Long id) {
@@ -35,8 +35,9 @@ public class SampleService {
         return sampleMapper.toResponse(sample);
     }
 
-    public void save(SampleCreateRequest request) {
-        sampleDao.save(sampleMapper.toEntity(request));
+    public Long save(SampleCreateRequest request) {
+        Sample sample = sampleDao.save(sampleMapper.toEntity(request));
+        return sample.getId();
     }
 
     @Transactional

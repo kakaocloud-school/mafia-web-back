@@ -1,11 +1,13 @@
 package com.gg.mafia.domain.member.application;
 
 import com.gg.mafia.domain.member.dao.UserDao;
+import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
 import com.gg.mafia.domain.member.dto.UserMapper;
 import com.gg.mafia.domain.member.exception.LoginFailedException;
-import com.gg.mafia.global.config.security.TokenProvider;
+import com.gg.mafia.domain.profile.domain.Profile;
+import com.gg.mafia.global.config.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -28,7 +30,16 @@ public class AuthService {
     public void signup(SignupRequest request) {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         request.setPassword(encodedPassword);
-        userDao.save(userMapper.toEntity(request));
+
+        User user = userMapper.toEntity(request);
+
+        Profile.builder()
+                .user(user)
+                .userName(request.getNickname())
+                .build();
+
+        userDao.save(user);
+
     }
 
     public String authenticate(LoginRequest request) {

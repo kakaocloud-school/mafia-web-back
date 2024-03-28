@@ -4,6 +4,7 @@ import com.gg.mafia.domain.profile.application.ProfileService;
 import com.gg.mafia.domain.profile.dto.ProfileRequest;
 import com.gg.mafia.domain.profile.dto.ProfileResponse;
 import com.gg.mafia.domain.profile.dto.RatingRequest;
+import com.gg.mafia.global.common.response.ApiResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/member")
 public class ProfileApi {
     @Autowired
     ProfileService profileService;
@@ -58,5 +60,9 @@ public class ProfileApi {
         profileService.patchRating(winnerTeamId, loserTeamId);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/ranks")
+    public ResponseEntity<ApiResponse<Page<RankResponse>>> getAllRanks(@PageableDefault Pageable pageable) {
+        Page<RankResponse> result = profileService.getAllRanks(pageable);
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
 }

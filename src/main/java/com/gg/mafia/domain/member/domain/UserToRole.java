@@ -9,16 +9,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -34,6 +31,13 @@ public class UserToRole extends BaseEntity {
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Role role;
+
+    @Builder
+    public UserToRole(User user, Role role) {
+        setUser(user);
+        setRole(role);
+    }
+
 
     public static UserToRole relate(User user, Role role) {
         UserToRole userToRole = new UserToRole();
