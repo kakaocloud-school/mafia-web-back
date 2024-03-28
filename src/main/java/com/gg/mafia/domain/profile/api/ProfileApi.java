@@ -44,50 +44,17 @@ public class ProfileApi {
     }
 
     //모든 유저rating으로 정렬
-    @GetMapping(value = "/")
-    public Page<ProfileResponse> allUsers(@RequestBody ProfileRequest request, @PathVariable("page") int page) {
-        String name = request.getUserName();
-        if (name != null) {
-//            return profileService.getByUserName(name, page);
-        }
-
+    @GetMapping(value = "/{page}")
+    public Page<ProfileResponse> allUsers(@PathVariable("page") int page) {
         return profileService.getAllUserWithRank(page);
+    }
+    @GetMapping(value = "/find-by-user-name/{userName}/{page}")
+
+    public Page<ProfileResponse> UsersSearch(@PathVariable("userName")String userName, @PathVariable("page") int page) {
+        return profileService.getByUserName(userName, page);
     }
 
     //마피아 승률로 모든유저 정렬
-    @GetMapping(value = "/mafiaRank")
-    public Page<ProfileResponse> allUsersWithMO(Pageable pageble)
-    {
-        Sort sort = Sort.by(Direction.DESC, "mafiaOdd");
-        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
-        return profileService.getAllUserWithMafiaOdd(page);
-    }
-
-    //의사 승률로 모든유저 정렬
-    @GetMapping(value = "/doctorRank")
-    public Page<ProfileResponse> allUsersWithDO(Pageable pageble)
-    {
-        Sort sort = Sort.by(Direction.DESC, "doctorOdd");
-        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
-        return profileService.getAllUserWithDoctorOdd(page);
-    }
-
-    //경찰 승률로 모든유저 정렬
-    @GetMapping(value = "/policeRank")
-    public Page<ProfileResponse> allUsersWithPO(Pageable pageble) {
-        Sort sort = Sort.by(Direction.DESC, "policeOdd");
-        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
-        return profileService.getAllUserWithPoliceOdd(page);
-    }
-
-    //시민 승률로 모든 유저 정렬
-    @GetMapping(value = "/citizenRank")
-    public Page<ProfileResponse> allUsersWithCO(Pageable pageble) {
-        Sort sort = Sort.by(Direction.DESC, "citizenOdd");
-        Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
-        return profileService.getAllUserWithCitizenOdd(page);
-    }
-
     @PatchMapping(value = "/update-rating")
     public ResponseEntity<Object> patchRating(@RequestBody RatingRequest ratingRequest) {
         List<Long> winnerTeamId = ratingRequest.getWinnerTeamId();

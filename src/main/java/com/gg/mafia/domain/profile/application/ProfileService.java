@@ -46,41 +46,20 @@ public class ProfileService {
 
     public Page<ProfileResponse> getByUserName(String name, int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        Page<Profile> profile = profileDao.findByUserName(name, pageable);
 
+        Page<Profile> profile = profileDao.findByUserName(name, pageable);
         return profileMapper.toProfileResponsePage(profile);
     }
 
     //모든 유저의 프로필을 랭킹별 오름차순정렬해서 가져옴
     public Page<ProfileResponse> getAllUserWithRank(int page) {
-        Sort sort = Sort.by(Direction.DESC, "ranking");
+        Sort sort = Sort.by(Direction.DESC, "rating");
         Pageable pageable = PageRequest.of(page, 10, sort);
         Page<Profile> profilePage = profileDao.findAll(pageable);
         return profileMapper.toProfileResponsePage(profilePage);
     }
 
     // 모든 유저의 프로필을 마피아 승률별 오름차순정렬해서 가져옴
-    public Page<ProfileResponse> getAllUserWithMafiaOdd(Pageable pageable) {
-        Page<Profile> profileList = profileDao.findAll(pageable);
-        return profileMapper.toProfileResponsePage(profileList);
-    }
-
-    public Page<ProfileResponse> getAllUserWithDoctorOdd(Pageable pageable) {
-        Page<Profile> profileList = profileDao.findAll(pageable);
-        return profileMapper.toProfileResponsePage(profileList);
-    }
-
-    public Page<ProfileResponse> getAllUserWithPoliceOdd(Pageable pageable) {
-        Page<Profile> profileList = profileDao.findAll(pageable);
-        return profileMapper.toProfileResponsePage(profileList);
-    }
-
-    public Page<ProfileResponse> getAllUserWithCitizenOdd(Pageable pageable) {
-        Page<Profile> profileList = profileDao.findAll(pageable);
-        return profileMapper.toProfileResponsePage(profileList);
-    }
-
-
     public void descriptionSave(ProfileRequest request) {
         profileDao.save(profileMapper.toEntity(request));
     }

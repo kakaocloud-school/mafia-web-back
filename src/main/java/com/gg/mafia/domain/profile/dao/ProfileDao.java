@@ -14,12 +14,8 @@ public interface ProfileDao extends JpaRepository<Profile, Long> {
     @NonNull
     Optional<Profile> findById(@NonNull Long Id);
 
-
     @NonNull
-    Optional<Profile> findByUser(@NonNull User user);
-
-    @NonNull
-    Page<Profile> findByUserName(@NonNull String userName, Pageable pageble);
+    Page<Profile> findByUserName(@NonNull String userName, Pageable pageable);
 
     @Override
     @NonNull
