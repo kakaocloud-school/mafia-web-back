@@ -1,6 +1,6 @@
 package com.gg.mafia.domain.profile.dto;
 
-import com.gg.mafia.domain.profile.domain.ProfileEntity;
+import com.gg.mafia.domain.profile.domain.Profile;
 import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,11 +20,11 @@ public interface ProfileMapper {
 
     //user.id를 userId에 맵핑한다는것빼고 필드가 같음 이렇게 해도 될것같음
     @Mapping(source = "user.id", target = "userId")
-    ProfileResponse toProfileResponse(ProfileEntity profileEntity);
+    ProfileResponse toProfileResponse(Profile profile);
 
     //    @Mapping(target = "user.id", qualifiedByName = "find")
     @Mapping(source = "userId", target = "user", qualifiedByName = "idToUser")
-    ProfileEntity toEntity(ProfileRequest request);
+    Profile toEntity(ProfileRequest request);
 
 
     @Named("idToUser")
@@ -37,9 +37,9 @@ public interface ProfileMapper {
     }
 
     @Mapping(source = "user.id", target = "userId")
-    ProfileResponse entityToResponse(ProfileEntity entity);
+    ProfileResponse entityToResponse(Profile entity);
 
-    default Page<ProfileResponse> toProfileResponsePage(Page<ProfileEntity> profileEntityPage) {
+    default Page<ProfileResponse> toProfileResponsePage(Page<Profile> profileEntityPage) {
         List<ProfileResponse> profileResponses = profileEntityPage.getContent()
                 .stream()
                 .map(this::entityToResponse)

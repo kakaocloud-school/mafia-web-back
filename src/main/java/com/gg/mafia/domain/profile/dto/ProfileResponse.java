@@ -13,10 +13,9 @@ public class ProfileResponse {
     private String userName;
     private String description;
     private int rating;
-    private int ranking;
-    private float mafiaOdd;
-    private float citizenOdd;
-    private float policeOdd;
-    private float doctorOdd;
-    private float averageOdd;
+    private float mafiaWinningRate;
+    private float citizenWinningRate;
+    private float policeWinningRate;
+    private float doctorWinningRate;
+    private float averageWinningRate;
 }

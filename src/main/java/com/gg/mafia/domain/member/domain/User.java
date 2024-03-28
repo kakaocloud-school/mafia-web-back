@@ -1,11 +1,13 @@
 package com.gg.mafia.domain.member.domain;
 
 import com.gg.mafia.domain.model.BaseEntity;
+import com.gg.mafia.domain.profile.domain.Profile;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -30,4 +32,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserToRole> userToRoles = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST,
+            CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Profile profile;
 }
