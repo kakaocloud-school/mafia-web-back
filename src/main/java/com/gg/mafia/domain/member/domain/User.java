@@ -1,10 +1,9 @@
 package com.gg.mafia.domain.member.domain;
 
-import com.gg.mafia.domain.achievement.domain.AchievementStep;
-import com.gg.mafia.domain.achievement.domain.UserAchievement;
 import com.gg.mafia.domain.model.BaseEntity;
 import com.gg.mafia.domain.profile.domain.Profile;
 import com.gg.mafia.domain.record.domain.GameParticipation;
+import com.gg.mafia.domain.profile.domain.Profile;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

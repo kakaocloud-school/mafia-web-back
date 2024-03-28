@@ -1,13 +1,9 @@
 package com.gg.mafia.global.config.security;
 
 import com.gg.mafia.global.config.filter.JwtFilter;
-import com.gg.mafia.global.config.security.jwt.JwtAccessDeniedHandler;
-import com.gg.mafia.global.config.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -61,6 +57,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/member/confirm-mail"),
                 new AntPathRequestMatcher("/member/oauth-types/**/validate-oauth2-code"),
                 new AntPathRequestMatcher("/member/ranks/**", HttpMethod.GET.name())
+                new AntPathRequestMatcher("/member/signup"),
+                new AntPathRequestMatcher("/profile/**"),
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
