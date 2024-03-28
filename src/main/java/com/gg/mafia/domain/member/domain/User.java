@@ -47,6 +47,7 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST,
             CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     private Profile profile;
+
     @Builder
     public User(String email, String password) {
         this.email = email;
