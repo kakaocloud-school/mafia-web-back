@@ -4,6 +4,7 @@ import com.gg.mafia.domain.profile.application.ProfileService;
 import com.gg.mafia.domain.profile.dto.ProfileRequest;
 import com.gg.mafia.domain.profile.dto.ProfileResponse;
 import com.gg.mafia.domain.profile.dto.RatingRequest;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,7 +48,7 @@ public class ProfileApi {
     public Page<ProfileResponse> allUsers(@RequestBody ProfileRequest request, @PathVariable("page") int page) {
         String name = request.getUserName();
         if (name != null) {
-            return profileService.getByUserName(name, page);
+//            return profileService.getByUserName(name, page);
         }
 
         return profileService.getAllUserWithRank(page);
@@ -55,7 +56,8 @@ public class ProfileApi {
 
     //마피아 승률로 모든유저 정렬
     @GetMapping(value = "/mafiaRank")
-    public Page<ProfileResponse> allUsersWithMO(Pageable pageble) {
+    public Page<ProfileResponse> allUsersWithMO(Pageable pageble)
+    {
         Sort sort = Sort.by(Direction.DESC, "mafiaOdd");
         Pageable page = PageRequest.of(pageble.getPageNumber(), 10, sort);
         return profileService.getAllUserWithMafiaOdd(page);
@@ -86,19 +88,11 @@ public class ProfileApi {
         return profileService.getAllUserWithCitizenOdd(page);
     }
 
-    @PatchMapping(value = "/update-win")
-    public ResponseEntity<Object> patchRatingWithWin(@RequestBody RatingRequest ratingRequest) {
-        Long myId = ratingRequest.getMyId();
-        Long opponentId = ratingRequest.getOpponentId();
-        profileService.patchWinRating(myId, opponentId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping(value = "/update-lose")
-    public ResponseEntity<Object> patchRatingWithLose(@RequestBody RatingRequest ratingRequest) {
-        Long myId = ratingRequest.getMyId();
-        Long opponentId = ratingRequest.getOpponentId();
-        profileService.patchLoseRating(myId, opponentId);
+    @PatchMapping(value = "/update-rating")
+    public ResponseEntity<Object> patchRating(@RequestBody RatingRequest ratingRequest) {
+        List<Long> winnerTeamId = ratingRequest.getWinnerTeamId();
+        List<Long> loserTeamId = ratingRequest.getLoserTeamId();
+        profileService.patchRating(winnerTeamId, loserTeamId);
         return ResponseEntity.ok().build();
     }
 

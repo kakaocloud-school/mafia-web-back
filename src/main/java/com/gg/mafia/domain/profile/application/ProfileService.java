@@ -8,6 +8,8 @@ import com.gg.mafia.domain.profile.dto.ProfileMapper;
 import com.gg.mafia.domain.profile.dto.ProfileRequest;
 import com.gg.mafia.domain.profile.dto.ProfileResponse;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -90,13 +92,8 @@ public class ProfileService {
         profileDao.save(profile);
     }
 
-    public void patchWinRating(Long myId, Long opId) {
-        ratingCal(myId, opId, true);
-    }
-
-    public void patchLoseRating(Long myId, Long opId) {
-
-        ratingCal(myId, opId, false);
+    public void patchRating(List<Long> winnerTeamId, List<Long> loserTeamId) {
+        ratingCal(winnerTeamId, loserTeamId);
     }
 
 
@@ -125,32 +122,43 @@ public class ProfileService {
     }
 
 
-    private void ratingCal(Long myId, Long opId, boolean winOrLose) {
-        Profile myEntity = findById(myId);
-        Profile opEntity = findById(opId);
-        int mR = myEntity.getRating();
-        int oR = opEntity.getRating();
+    private void ratingCal(List<Long> winnerTeamId, List<Long> loserTeamId) {
+        List<Profile> winnerTeamEntities = new ArrayList<Profile>();
+        List<Profile> loserTeamEntities = new ArrayList<Profile>();
+        int winnerTeamRating = 0;
+        int loserTeamRating = 0;
+        for(Long id:winnerTeamId){
+            Profile pro = findById(id);
+            winnerTeamEntities.add(pro);
+            winnerTeamRating+=pro.getRating();
+        }
+        for(Long id:loserTeamId)
+        {
+            Profile pro = findById(id);
+            loserTeamEntities.add(pro);
+            loserTeamRating+=pro.getRating();
+        }
+        winnerTeamRating/=winnerTeamId.size();
+        loserTeamRating/=loserTeamId.size();
+
         //엘로레이팅의 기대 승률
-        double myExpectedOdd = 1 / ((Math.pow(10, (double) (oR - mR) / 400)) + 1);
-        double opExpectedOdd = 1 / ((Math.pow(10, (double) (mR - oR) / 400)) + 1);
-        int myNowRating = myEntity.getRating();
-        int opNowRating = opEntity.getRating();
+        double winnerTeamExpectedWinningRate = 1 / ((Math.pow(10, (double) (loserTeamRating - winnerTeamRating / 400)) + 1));
+        double loserExpectedWinningRate = 1 / ((Math.pow(10, (double) (winnerTeamRating - loserTeamRating) / 400)) + 1);
         double myChangeRating = 0;
         double opChangeRating = 0;
-        if (winOrLose) {
             //엘로레이팅의 변화하는 레이팅
-            myChangeRating = ceil(myNowRating + 20 * (1 - myExpectedOdd));
-            opChangeRating = ceil(opNowRating + 20 * (0 - opExpectedOdd));
-
-        } else {
-            //엘로레이팅의 변화하는 레이팅
-            myChangeRating = ceil(myNowRating + 20 * (0 - myExpectedOdd));
-            opChangeRating = ceil(opNowRating + 20 * (1 - opExpectedOdd));
+        double winnerTeamChangingRating = ceil(winnerTeamRating + 20 * (1 - winnerTeamExpectedWinningRate));
+        double loserTeamChangingRating = ceil(loserTeamRating + 20 * (0 - loserExpectedWinningRate));
+        for(Profile winner:winnerTeamEntities)
+        {
+            winner.setRating((int) winnerTeamChangingRating);
+            profileDao.save(winner);
         }
-        myEntity.setRating((int) myChangeRating);
-        opEntity.setRating((int) opChangeRating);
-        profileDao.save(myEntity);
-        profileDao.save(opEntity);
+        for(Profile loser:loserTeamEntities)
+        {
+            loser.setRating((int) loserTeamChangingRating);
+            profileDao.save(loser);
+        }
     }
 
 

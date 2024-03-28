@@ -1,13 +1,14 @@
 package com.gg.mafia.domain.profile.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 import lombok.Data;
 
 @Data
 public class RatingRequest {
     @NotBlank
-    private Long myId;
+    private List<Long> winnerTeamId;
     @NotBlank
-    private Long opponentId;
+    private List<Long> loserTeamId;
 
 }
