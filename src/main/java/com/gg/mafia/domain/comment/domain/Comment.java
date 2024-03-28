@@ -25,17 +25,25 @@ public class Comment extends BaseEntity {
     private User user;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "profile_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Profile profile;
 
     @Builder
     public Comment(String comment, User user, Profile profile) {
         this.comment = comment;
         this.user = user;
-        this.profile = profile;
+        setProfile(profile);
     }
 
     public void updateComment(String updateComment) {
         this.comment = updateComment;
+    }
+
+    public void setProfile(Profile profile) {
+        if (this.profile != null) {
+            this.profile.removeComment(this);
+        }
+        profile.addComment(this);
+        this.profile = profile;
     }
 }
