@@ -3,6 +3,7 @@ package com.gg.mafia.domain.profile.api;
 import com.gg.mafia.domain.profile.application.ProfileService;
 import com.gg.mafia.domain.profile.dto.ProfileRequest;
 import com.gg.mafia.domain.profile.dto.ProfileResponse;
+import com.gg.mafia.domain.profile.dto.RankResponse;
 import com.gg.mafia.domain.profile.dto.RatingRequest;
 import com.gg.mafia.global.common.response.ApiResponse;
 import java.util.List;
