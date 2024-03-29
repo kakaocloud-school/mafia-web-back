@@ -35,8 +35,8 @@ public class Comment extends BaseEntity {
         setProfile(profile);
     }
 
-    public void updateComment(String updateComment) {
-        this.content = updateComment;
+    public void updateContent(String updateContent) {
+        this.content = updateContent;
     }
 
     public void setProfile(Profile profile) {

@@ -79,7 +79,7 @@ class CommentTest {
         em.flush();
         em.clear();
 
-        comment.updateComment("변경 후 댓글 내용");
+        comment.updateContent("변경 후 댓글 내용");
         int result = em.createQuery("update Comment c set c.content =:newContent where c.id =:commentId")
                 .setParameter("newContent", comment.getContent())
                 .setParameter("commentId", comment.getId())
