@@ -30,12 +30,6 @@ public class CommentApi {
         return ResponseEntity.ok(ApiResponse.success(comments));
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Comment>>> showCommentsByUser(Principal principal,
-                                                                         @RequestParam Long userId) {
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> saveComment(Principal principal, @RequestBody CommentRequest request) {
         commentService.insertComment(principal.getName(), request.getProfileId(),
