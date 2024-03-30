@@ -32,10 +32,18 @@ public class Comment extends BaseEntity {
     public Comment(String comment, User user, Profile profile) {
         this.comment = comment;
         this.user = user;
-        this.profile = profile;
+        setProfile(profile);
     }
 
     public void updateComment(String updateComment) {
         this.comment = updateComment;
+    }
+  
+    public void setProfile(Profile profile) {
+        if (this.profile != null) {
+            this.profile.removeComment(this);
+        }
+        profile.addComment(this);
+        this.profile = profile;
     }
 }
