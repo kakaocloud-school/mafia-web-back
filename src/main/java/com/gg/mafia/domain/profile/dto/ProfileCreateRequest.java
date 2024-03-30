@@ -1,10 +1,14 @@
 package com.gg.mafia.domain.profile.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 
 @Data
-public class ProfileRequest {
+public class ProfileCreateRequest {
     private Long userId;
+
     private String description;
+
+    @URL
+    private String imageUrl;
 }

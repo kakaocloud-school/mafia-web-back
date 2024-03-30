@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.gg.mafia.domain.member.exception.LoginFailedException;
 import com.gg.mafia.domain.member.exception.MailServerException;
 import com.gg.mafia.domain.member.exception.RequestThrottlingException;
-import com.gg.mafia.domain.member.exception.UserAlreadyExistsException;
 import com.gg.mafia.domain.member.exception.SignupFailedException;
+import com.gg.mafia.domain.member.exception.UserAlreadyExistsException;
+import com.gg.mafia.domain.member.exception.UserNotAllowedException;
 import com.gg.mafia.global.common.response.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -87,12 +89,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ApiResponse.error(exception.getMessage()));
     }
 
-//    @ExceptionHandler(UserNotAllowedException.class)
-//    ResponseEntity<ApiResponse<Void>> handleForbiddenException(UserNotAllowedException exception){
-//        logger.error("message", exception);
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                .body(ApiResponse.error(exception.getMessage()));
-//    }
+    @ExceptionHandler({UserNotAllowedException.class, AccessDeniedException.class})
+    ResponseEntity<ApiResponse<Void>> handleForbiddenException(Exception exception) {
+        logger.error("message", exception);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(exception.getMessage()));
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     ResponseEntity<ApiResponse<Void>> handleNotFoundException(EntityNotFoundException exception) {
