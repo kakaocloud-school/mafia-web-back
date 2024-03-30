@@ -71,11 +71,16 @@ public class GameDaoImpl implements GameDaoCustom {
                 .job(dto.getJob())
                 .build();
 
-        return queryFactory
+        Integer count = queryFactory
                 .select(targetCount.sum())
                 .from(game)
                 .where(buildGameParticipationSubQuery(gameParticipationSubQueryDto))
                 .fetchOne();
+        if (count == null) {
+            count = 0;
+        }
+
+        return count;
     }
 
     private BooleanBuilder buildSearchCondition(SearchQuery searchQuery) {
