@@ -5,9 +5,12 @@ import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.member.dto.LoginRequest;
 import com.gg.mafia.domain.member.dto.SignupRequest;
 import com.gg.mafia.domain.member.dto.UserMapper;
+import com.gg.mafia.domain.member.dto.UserinfoResponse;
 import com.gg.mafia.domain.member.exception.LoginFailedException;
 import com.gg.mafia.domain.profile.domain.Profile;
 import com.gg.mafia.global.config.security.jwt.TokenProvider;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -55,5 +58,18 @@ public class AuthService {
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return tokenProvider.createToken(authentication);
+    }
+
+    public UserinfoResponse getUserinfo(String email) {
+        User user = findUserByEmail(email);
+        return userMapper.toUserinfoResponse(user);
+    }
+
+    private User findUserByEmail(String email) {
+        Optional<User> user = userDao.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return user.get();
     }
 }
