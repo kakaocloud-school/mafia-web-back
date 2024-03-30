@@ -24,11 +24,11 @@ public class CommentService {
     }
 
     @Transactional
-    public void insertComment(String userEmail, Long profileId, String content) {
+    public Comment insertComment(String userEmail, Long profileId, String content) {
         User user = getUserByEmail(userEmail);
         Profile profile = getProfileById(profileId);
-        Comment comment = Comment.builder().user(user).profile(profile).content(content).build();
-        commentDao.save(comment);
+        Comment comment = createComment(user, profile, content);
+        return commentDao.save(comment);
     }
 
     @Transactional
@@ -42,6 +42,10 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         commentDao.deleteById(commentId);
+    }
+
+    private Comment createComment(User user, Profile profile, String content) {
+        return Comment.builder().user(user).profile(profile).content(content).build();
     }
 
     private User getUserByEmail(String userEmail) {
