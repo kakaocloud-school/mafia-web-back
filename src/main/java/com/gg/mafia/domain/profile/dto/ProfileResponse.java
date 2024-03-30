@@ -12,6 +12,7 @@ public class ProfileResponse {
     private Long userId;
     private String userName;
     private String description;
+    private String imageUrl;
     private int rating;
     private float mafiaWinningRate;
     private float citizenWinningRate;

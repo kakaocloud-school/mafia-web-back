@@ -18,11 +18,9 @@ public class RankResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedAt;
 
-    private String title;
-
-    private String content;
-
     private String description;
+
+    private String imageUrl;
 
     private Long userId;
 

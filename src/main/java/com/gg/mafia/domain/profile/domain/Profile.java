@@ -27,6 +27,8 @@ public class Profile extends BaseEntity {
     @Column(nullable = false)
     private String description = "안녕하세요";
 
+    private String imageUrl;
+
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
