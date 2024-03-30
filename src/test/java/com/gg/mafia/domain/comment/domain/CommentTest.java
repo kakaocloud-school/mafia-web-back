@@ -59,7 +59,7 @@ class CommentTest {
     @Test
     @DisplayName("Comment 조회 및 생성 테스트")
     public void selectAndCreateComment() {
-        comment = Comment.builder().comment("댓글 내용").user(user).profile(profile).build();
+        comment = Comment.builder().content("댓글 내용").user(user).profile(profile).build();
 
         em.persist(comment);
         em.clear();
@@ -74,14 +74,14 @@ class CommentTest {
     @Test
     @DisplayName("Comment 업데이트 테스트")
     public void updateComment() {
-        comment = Comment.builder().comment("댓글 내용").user(user).profile(profile).build();
+        comment = Comment.builder().content("댓글 내용").user(user).profile(profile).build();
         em.persist(comment);
         em.flush();
         em.clear();
 
-        comment.updateComment("변경 후 댓글 내용");
-        int result = em.createQuery("update Comment c set c.comment =:newComment where c.id =:commentId")
-                .setParameter("newComment", comment.getComment())
+        comment.updateContent("변경 후 댓글 내용");
+        int result = em.createQuery("update Comment c set c.content =:newContent where c.id =:commentId")
+                .setParameter("newContent", comment.getContent())
                 .setParameter("commentId", comment.getId())
                 .executeUpdate();
 
@@ -90,13 +90,13 @@ class CommentTest {
         Comment findComment = em.find(Comment.class, comment.getId());
 
         Assertions.assertThat(comment.getId()).isEqualTo(findComment.getId());
-        Assertions.assertThat(comment.getComment()).isEqualTo(findComment.getComment());
+        Assertions.assertThat(comment.getContent()).isEqualTo(findComment.getContent());
     }
 
     @Test
     @DisplayName("Comment 삭제 테스트")
     public void removeComment() {
-        comment = Comment.builder().comment("댓글 내용").user(user).profile(profile).build();
+        comment = Comment.builder().content("댓글 내용").user(user).profile(profile).build();
         em.persist(comment);
         em.flush();
         em.createQuery("delete from Comment c where c.id =:commentId")

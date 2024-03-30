@@ -8,6 +8,7 @@ import com.gg.mafia.global.config.AppConfig;
 import com.gg.mafia.global.config.auditing.AuditingConfig;
 import com.gg.mafia.global.config.db.TestDbConfig;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -64,9 +65,9 @@ class CommentDaoTest {
     public void findByUserIdTest() {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
-        Comment findComment = commentDao.findByUserId(comment.getUser().getId());
+        List<Comment> findComment = commentDao.findByUserId(comment.getUser().getId());
 
-        Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
+        Assertions.assertThat(findComment.get(0).getId()).isEqualTo(comment.getId());
     }
 
     @Test
@@ -75,9 +76,9 @@ class CommentDaoTest {
     public void findByProfileIdTest() {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
-        Comment findComment = commentDao.findByProfileId(comment.getProfile().getId());
+        List<Comment> findComment = commentDao.findByProfileId(comment.getProfile().getId());
 
-        Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
+        Assertions.assertThat(findComment.get(0).getId()).isEqualTo(comment.getId());
     }
 
     @Test
@@ -87,7 +88,7 @@ class CommentDaoTest {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
         Comment findComment = commentDao.findByUserIdAndProfileId(comment.getUser().getId(),
-                comment.getProfile().getId());
+                comment.getProfile().getId()).get();
 
         Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
     }
@@ -134,7 +135,7 @@ class CommentDaoTest {
         user = createUser(email, pw);
         profile = createProfile(user, userName);
 
-        return Comment.builder().user(user).profile(profile).comment(comment).build();
+        return Comment.builder().user(user).profile(profile).content(comment).build();
     }
 
     private Profile createProfile(User user, String userName) {

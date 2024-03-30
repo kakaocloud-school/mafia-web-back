@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Comment extends BaseEntity {
-    private String comment;
+    private String content;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -29,14 +29,14 @@ public class Comment extends BaseEntity {
     private Profile profile;
 
     @Builder
-    public Comment(String comment, User user, Profile profile) {
-        this.comment = comment;
+    public Comment(String content, User user, Profile profile) {
+        this.content = content;
         this.user = user;
         setProfile(profile);
     }
 
-    public void updateComment(String updateComment) {
-        this.comment = updateComment;
+    public void updateContent(String updateContent) {
+        this.content = updateContent;
     }
   
     public void setProfile(Profile profile) {
