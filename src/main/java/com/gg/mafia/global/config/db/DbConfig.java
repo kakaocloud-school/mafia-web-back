@@ -7,19 +7,28 @@ import javax.sql.DataSource;
 import lombok.AllArgsConstructor;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @Import(QueryDslConfig.class)
 @EnableJpaRepositories("com.gg.mafia")
+@ComponentScan(
+        basePackages = "com.gg.mafia",
+        useDefaultFilters = false,
+        includeFilters = @Filter(type = FilterType.ANNOTATION, classes = Repository.class)
+)
 @EnableTransactionManagement
 @AllArgsConstructor
 public class DbConfig {
