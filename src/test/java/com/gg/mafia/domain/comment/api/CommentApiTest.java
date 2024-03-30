@@ -70,8 +70,8 @@ class CommentApiTest {
 
         mockMvc.perform(patch("/comments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"profileId\" : \"%d\", \"updateContent\" : \"%s\"}",
-                                commentRequest.getProfileId(), commentRequest.getUpdateContent()))
+                        .content(String.format("{\"commentId\" : \"%d\", \"updateContent\" : \"%s\"}",
+                                commentRequest.getCommentId(), commentRequest.getUpdateContent()))
                         .principal(principal)
                 )
                 .andExpect(status().isOk());

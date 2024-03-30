@@ -32,9 +32,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(String userEmail, Long profileId, String updateContent) {
+    public void updateComment(String userEmail, Long commentId, String updateContent) {
         User user = getUserByEmail(userEmail);
-        Comment comment = getCommentByUserIdAndProfileId(user.getId(), profileId);
+        Comment comment = getCommentByUserIdAndCommentId(user.getId(), commentId);
         comment.updateContent(updateContent);
         commentDao.save(comment);
     }
@@ -56,8 +56,12 @@ public class CommentService {
         return profileDao.findById(profileId).orElseThrow(() -> new IllegalArgumentException());
     }
 
-    private Comment getCommentByUserIdAndProfileId(Long userId, Long profileId) {
-        return commentDao.findByUserIdAndProfileId(userId, profileId).orElseThrow(() -> new IllegalArgumentException());
+    private List<Comment> getCommentByUserIdAndProfileId(Long userId, Long profileId) {
+        return commentDao.findByUserIdAndProfileId(userId, profileId);
+    }
+
+    private Comment getCommentByUserIdAndCommentId(Long userId, Long commentId) {
+        return commentDao.findByUserIdAndId(userId, commentId).orElseThrow(() -> new IllegalArgumentException());
     }
 
     private List<Comment> getCommentByProfileId(Long profiletId) {

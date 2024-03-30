@@ -101,7 +101,7 @@ class CommentServiceTest {
         // Given
         given(user.getId()).willReturn(1L);
         given(userDao.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-        given(commentDao.findByUserIdAndProfileId(1L, 1L)).willReturn(Optional.of(comment));
+        given(commentDao.findByUserIdAndId(1L, 1L)).willReturn(Optional.of(comment));
 
         // WHEN
         service.updateComment(user.getEmail(), 1L, "TEST_NEW_CONTENT");

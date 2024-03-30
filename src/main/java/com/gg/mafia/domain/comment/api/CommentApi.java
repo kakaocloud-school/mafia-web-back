@@ -39,7 +39,7 @@ public class CommentApi {
 
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> updateComment(Principal principal, @RequestBody CommentRequest request) {
-        commentService.updateComment(principal.getName(), request.getProfileId(), request.getUpdateContent());
+        commentService.updateComment(principal.getName(), request.getCommentId(), request.getUpdateContent());
         return ResponseEntity.ok().build();
     }
 
