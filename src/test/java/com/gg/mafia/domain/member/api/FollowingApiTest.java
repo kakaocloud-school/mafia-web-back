@@ -71,8 +71,6 @@ class FollowingApiTest {
 
     @Test
     void removeFollow() throws Exception {
-        given(principal.getName()).willReturn(user.getEmail());
-
         mockMvc.perform(delete("/member/follow")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(String.format("{\"followeeEmail\" : \"%s\"}", user.getEmail()))

@@ -10,5 +10,7 @@ public interface CommentDao extends JpaRepository<Comment, Long>, CommentDaoCust
 
     List<Comment> findByProfileId(Long id);
 
-    Optional<Comment> findByUserIdAndProfileId(Long id, Long id1);
+    List<Comment> findByUserIdAndProfileId(Long id, Long id1);
+
+    Optional<Comment> findByUserIdAndId(Long userId, Long commentId);
 }

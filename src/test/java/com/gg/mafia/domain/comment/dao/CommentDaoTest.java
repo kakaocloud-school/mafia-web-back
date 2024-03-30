@@ -82,12 +82,12 @@ class CommentDaoTest {
     }
 
     @Test
-    @DisplayName("comment - findByUserIdAndProfileId() 테스트")
+    @DisplayName("comment - findByUserIdAndCommentId() 테스트")
     @Transactional
     public void findByUserIdAndProfileIdTest() {
         Comment comment = saveComment(createComment("TEST@naver.com", "123", "TEST_USER", "TEST_COMMENT"));
 
-        Comment findComment = commentDao.findByUserIdAndProfileId(comment.getUser().getId(),
+        Comment findComment = commentDao.findByUserIdAndId(comment.getUser().getId(),
                 comment.getProfile().getId()).get();
 
         Assertions.assertThat(findComment.getId()).isEqualTo(comment.getId());
