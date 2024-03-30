@@ -63,6 +63,7 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/member/ranks/**", HttpMethod.GET.name()),
                 new AntPathRequestMatcher("/member/signup"),
                 new AntPathRequestMatcher("/profile/**"),
+                new AntPathRequestMatcher("/record/**", HttpMethod.GET.name()),
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
