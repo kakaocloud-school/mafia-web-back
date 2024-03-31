@@ -29,8 +29,9 @@ public class ProfileApi {
     ProfileService profileService;
 
     @GetMapping(value = "/users/{id}/profile")
-    public ProfileResponse getByUserId(@PathVariable("id") Long id) {
-        return profileService.getByUserId(id);
+    public ResponseEntity<ApiResponse<ProfileResponse>> getByUserId(@PathVariable("id") Long id) {
+        ProfileResponse result = profileService.getByUserId(id);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @GetMapping("/ranks")

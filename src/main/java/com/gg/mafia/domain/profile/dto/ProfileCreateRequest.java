@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.URL;
 public class ProfileCreateRequest {
     private Long userId;
 
+    private String userName;
+
     private String description;
 
     @URL

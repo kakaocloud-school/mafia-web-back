@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.URL;
 
 @Data
 public class ProfileUpdateRequest {
+    private String userName;
+
     private String description;
 
     @URL
