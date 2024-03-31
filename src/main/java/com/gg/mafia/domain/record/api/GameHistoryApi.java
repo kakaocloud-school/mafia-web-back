@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class GameHistoryApi {
     private final GameHistoryService gameHistoryService;
 
     @GetMapping("/{userId}/histories")
-    public ResponseEntity<ApiResponse<Page<GameHistoryResponse>>> getAll(Long userId,
+    public ResponseEntity<ApiResponse<Page<GameHistoryResponse>>> getAll(@PathVariable Long userId,
                                                                          @PageableDefault Pageable pageable) {
         Page<GameHistoryResponse> result = gameHistoryService.getAll(userId, pageable);
         return ResponseEntity.ok(ApiResponse.success(result));
