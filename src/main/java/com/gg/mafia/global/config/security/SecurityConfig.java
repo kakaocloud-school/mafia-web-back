@@ -61,6 +61,7 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/member/confirm-mail"),
                 new AntPathRequestMatcher("/member/oauth-types/**/validate-oauth2-code"),
                 new AntPathRequestMatcher("/member/ranks/**", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/member/users/**", HttpMethod.GET.name()),
                 new AntPathRequestMatcher("/profile/**"),
                 new AntPathRequestMatcher("/record/**", HttpMethod.GET.name()),
         };

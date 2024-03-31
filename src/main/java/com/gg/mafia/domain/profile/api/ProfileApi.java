@@ -39,7 +39,7 @@ public class ProfileApi {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/users/search")
     public ResponseEntity<ApiResponse<Page<ProfileResponse>>> search(
             ProfileSearchRequest request,
             SearchQuery searchQuery,
