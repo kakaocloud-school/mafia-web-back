@@ -34,12 +34,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthApi {
     private final AuthService authService;
     private final OAuthService oAuthService;
+    private final MailService mailService;
     private final Environment env;
 
-    private final MailService mailService;
 
-
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Validated SignupRequest request) {
         if (!mailService.confirmMail(request.getEmail(), request.getEmailCode())) {
             throw new UserNotAllowedException("인증되지 않은 사용자입니다.");
