@@ -12,6 +12,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ProfileMapper {
     ProfileResponse toResponse(Profile profile);
 
+    Profile toEntity(ProfileCreateRequest request);
+
     RankResponse toRankResponse(Profile profile);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)

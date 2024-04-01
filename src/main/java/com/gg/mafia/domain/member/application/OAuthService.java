@@ -4,6 +4,7 @@ import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.member.dto.OAuthUserDto;
 import com.gg.mafia.domain.member.exception.SignupFailedException;
+import com.gg.mafia.domain.profile.domain.Profile;
 import com.gg.mafia.global.config.security.jwt.TokenProvider;
 import com.gg.mafia.global.config.security.oauth.GoogleStrategy;
 import com.gg.mafia.global.config.security.oauth.KakaoStrategy;
@@ -40,9 +41,9 @@ public class OAuthService {
         OAuthStrategy strategy;
         if (oAuthType.equals(OAuthStrategy.GOOGLE)) {
             strategy = googleStrategy;
-        } else if(oAuthType.equals(OAuthStrategy.KAKAO)){
+        } else if (oAuthType.equals(OAuthStrategy.KAKAO)) {
             strategy = kakaoStrategy;
-        } else if(oAuthType.equals(OAuthStrategy.NAVER)){
+        } else if (oAuthType.equals(OAuthStrategy.NAVER)) {
             strategy = naverStrategy;
         } else {
             throw new IllegalArgumentException("OAuth 타입 불명");
@@ -63,6 +64,10 @@ public class OAuthService {
         User user = User.builder()
                 .email(oAuthUserDto.getEmail())
                 .password(oAuthUserDto.getStrategyCode())
+                .build();
+        Profile.builder()
+                .user(user)
+                .userName(oAuthUserDto.getEmail())
                 .build();
         userDao.save(user);
         return user;

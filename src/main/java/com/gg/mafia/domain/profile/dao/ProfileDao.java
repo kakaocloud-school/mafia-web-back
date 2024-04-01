@@ -11,8 +11,7 @@ import org.springframework.lang.NonNull;
 
 public interface ProfileDao extends JpaRepository<Profile, Long>, ProfileDaoCustom {
     @Override
-    @NonNull
-    Optional<Profile> findById(@NonNull Long Id);
+    Optional<Profile> findByUserId(Long Id);
 
     @Override
     Page<Profile> search(ProfileSearchRequest dto, SearchQuery searchQuery, @NonNull Pageable pageable);

@@ -27,6 +27,15 @@ public class ProfileDaoImpl implements ProfileDaoCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public Optional<Profile> findByUserId(Long userId) {
+        QProfile profile = QProfile.profile;
+        return Optional.ofNullable(queryFactory
+                .selectFrom(profile)
+                .where(profile.user.id.eq(userId))
+                .fetchOne());
+    }
+
+    @Override
     public Page<Profile> findAllRanks(Pageable pageable) {
         QProfile profile = QProfile.profile;
         List<Long> ids = queryFactory.select(profile.id)

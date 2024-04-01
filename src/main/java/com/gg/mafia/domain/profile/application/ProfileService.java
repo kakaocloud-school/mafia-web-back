@@ -2,8 +2,11 @@ package com.gg.mafia.domain.profile.application;
 
 import static java.lang.Math.ceil;
 
+import com.gg.mafia.domain.member.dao.UserDao;
+import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.profile.dao.ProfileDao;
 import com.gg.mafia.domain.profile.domain.Profile;
+import com.gg.mafia.domain.profile.dto.ProfileCreateRequest;
 import com.gg.mafia.domain.profile.dto.ProfileMapper;
 import com.gg.mafia.domain.profile.dto.ProfileResponse;
 import com.gg.mafia.domain.profile.dto.ProfileSearchRequest;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProfileService {
     private final ProfileDao profileDao;
+    private final UserDao userDao;
     private final ProfileMapper profileMapper;
 
     public Page<RankResponse> getAllRanks(Pageable pageable) {
@@ -43,13 +47,18 @@ public class ProfileService {
     }
 
     public ProfileResponse getByUserId(Long id) {
-        Profile profile = findById(id);
+        Profile profile = findByUserIdOrCreate(id);
         return profileMapper.toResponse(profile);
+    }
+
+    public Long save(ProfileCreateRequest request) {
+        Profile profile = profileMapper.toEntity(request);
+        return profile.getId();
     }
 
     @Transactional
     public void updateProfile(Long userId, ProfileUpdateRequest request) {
-        Profile profile = findById(userId);
+        Profile profile = findByUserIdOrCreate(userId);
         profileMapper.updateProfileFromDto(request, profile);
     }
 
@@ -91,12 +100,12 @@ public class ProfileService {
         int winnerTeamRating = 0;
         int loserTeamRating = 0;
         for (Long id : winnerTeamId) {
-            Profile pro = findById(id);
+            Profile pro = findByUserIdOrCreate(id);
             winnerTeamEntities.add(pro);
             winnerTeamRating += pro.getRating();
         }
         for (Long id : loserTeamId) {
-            Profile pro = findById(id);
+            Profile pro = findByUserIdOrCreate(id);
             loserTeamEntities.add(pro);
             loserTeamRating += pro.getRating();
         }
@@ -122,12 +131,19 @@ public class ProfileService {
         }
     }
 
-    private Profile findById(Long id) {
-        Optional<Profile> OProfileEntity = profileDao.findById(id);
-        if (OProfileEntity.isPresent()) {
-            return OProfileEntity.get();
-        } else {
+    private Profile findByUserIdOrCreate(Long id) {
+        Optional<User> optionalUser = userDao.findById(id);
+        if (optionalUser.isEmpty()) {
             throw new EntityNotFoundException("존재하지 않는 리소스");
         }
+        Optional<Profile> optionalProfile = profileDao.findByUserId(id);
+        return optionalProfile.orElseGet(() -> {
+            Profile profile = Profile.builder()
+                    .user(optionalUser.get())
+                    .userName(optionalUser.get().getEmail())
+                    .build();
+            profileDao.save(profile);
+            return profile;
+        });
     }
 }
