@@ -18,5 +18,5 @@ public class ProfileResponse {
     private float citizenWinningRate;
     private float policeWinningRate;
     private float doctorWinningRate;
-    private float averageWinningRate;
+    private float winningRate;
 }
