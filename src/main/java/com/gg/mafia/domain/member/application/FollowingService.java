@@ -27,12 +27,16 @@ public class FollowingService {
         return followingDao.save(following);
     }
 
-    public Page<FollowingResponse> getFollowees(String followerEmail, Pageable pageable) {
-        return followingResDao.findByFollowerId(getUser(followerEmail).getId(), pageable);
+    public Page<FollowingResponse> getFollowees(Long followerId, Pageable pageable) {
+        return followingResDao.findByFollowerId(getUserById(followerId).getId(), pageable);
     }
 
-    public List<Following> getFollowers(String followeeEmail) {
-        return followingDao.findByFolloweeId(getUser(followeeEmail).getId());
+    private User getUserById(Long followerId) {
+        return userDao.findById(followerId).orElseThrow(() -> new IllegalArgumentException());
+    }
+
+    public List<Following> getFollowers(Long followeeId) {
+        return followingDao.findByFolloweeId(getUserById(followeeId).getId());
     }
 
     @Transactional

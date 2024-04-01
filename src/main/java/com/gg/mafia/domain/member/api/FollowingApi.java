@@ -13,10 +13,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,18 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class FollowingApi {
     private final FollowingService followingService;
 
-    @GetMapping("/follow/followees")
+    @GetMapping("/users/{userId}/followees")
     public ResponseEntity<ApiResponse<Page<FollowingResponse>>> showFollowees(Principal principal,
-                                                                              @RequestParam String followerEmail,
+                                                                              @PathVariable Long userId,
                                                                               @PageableDefault Pageable pageable) {
-        Page<FollowingResponse> followees = followingService.getFollowees(followerEmail, pageable);
+        Page<FollowingResponse> followees = followingService.getFollowees(userId, pageable);
         return ResponseEntity.ok(ApiResponse.success(followees));
     }
 
-    @GetMapping("/follow/followers")
+    @GetMapping("/users/{userId}/followers")
     public ResponseEntity<ApiResponse<List<Following>>> showFollowers(Principal principal,
-                                                                      @RequestParam String email) {
-        List<Following> followees = followingService.getFollowers(email);
+                                                                      @PathVariable Long userId) {
+        List<Following> followees = followingService.getFollowers(userId);
         return ResponseEntity.ok(ApiResponse.success(followees));
     }
 
