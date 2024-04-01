@@ -3,6 +3,7 @@ package com.gg.mafia.domain.achievement.application;
 import com.gg.mafia.domain.achievement.dao.AchievementDao;
 import com.gg.mafia.domain.achievement.dao.AchievementStepDao;
 import com.gg.mafia.domain.achievement.dao.UserAchievementDao;
+import com.gg.mafia.domain.achievement.domain.Achievement;
 import com.gg.mafia.domain.achievement.domain.AchievementEnum;
 import com.gg.mafia.domain.achievement.domain.AchievementStep;
 import com.gg.mafia.domain.achievement.domain.UserAchievement;
@@ -84,5 +85,10 @@ public class AchievementService {
                     achievementDao.findByAchievementName(e).get());
             userAchievementDao.save(obj);
         });
+    }
+
+    public List<Achievement> getUserAchievementByUserId(Long userId) {
+        List<UserAchievement> userAchievements = userAchievementDao.findByUserId(userId);
+        return userAchievements.stream().map(e -> e.getAchievement()).toList();
     }
 }
