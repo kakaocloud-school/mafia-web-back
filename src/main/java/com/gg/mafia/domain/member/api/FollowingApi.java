@@ -1,11 +1,9 @@
 package com.gg.mafia.domain.member.api;
 
 import com.gg.mafia.domain.member.application.FollowingService;
-import com.gg.mafia.domain.member.domain.Following;
 import com.gg.mafia.domain.member.dto.FollowingResponse;
 import com.gg.mafia.global.common.response.ApiResponse;
 import java.security.Principal;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,23 +24,22 @@ public class FollowingApi {
     private final FollowingService followingService;
 
     @GetMapping("/users/{userId}/followees")
-    public ResponseEntity<ApiResponse<Page<FollowingResponse>>> showFollowees(Principal principal,
-                                                                              @PathVariable Long userId,
+    public ResponseEntity<ApiResponse<Page<FollowingResponse>>> showFollowees(@PathVariable Long userId,
                                                                               @PageableDefault Pageable pageable) {
         Page<FollowingResponse> followees = followingService.getFollowees(userId, pageable);
         return ResponseEntity.ok(ApiResponse.success(followees));
     }
 
     @GetMapping("/users/{userId}/followers")
-    public ResponseEntity<ApiResponse<List<Following>>> showFollowers(Principal principal,
-                                                                      @PathVariable Long userId) {
-        List<Following> followees = followingService.getFollowers(userId);
-        return ResponseEntity.ok(ApiResponse.success(followees));
+    public ResponseEntity<ApiResponse<Page<FollowingResponse>>> showFollowers(@PathVariable Long userId,
+                                                                              @PageableDefault Pageable pageable) {
+        Page<FollowingResponse> followers = followingService.getFollowers(userId, pageable);
+        return ResponseEntity.ok(ApiResponse.success(followers));
     }
 
-    @PostMapping("/follow")
-    public ResponseEntity<ApiResponse<Void>> addFollow(Principal principal, @RequestBody String followeeEmail) {
-        followingService.insertFollowing(principal.getName(), followeeEmail);
+    @PostMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<Void>> addFollow(Principal principal, @PathVariable Long userId) {
+        followingService.insertFollowing(principal.getName(), userId);
         return ResponseEntity.ok().build();
     }
 

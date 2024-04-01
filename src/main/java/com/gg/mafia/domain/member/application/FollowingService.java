@@ -7,7 +7,6 @@ import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.Following;
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.member.dto.FollowingResponse;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +21,8 @@ public class FollowingService {
     private final UserDao userDao;
 
     @Transactional
-    public Following insertFollowing(String followerEmail, String followeeEmail) {
-        Following following = createFollowing(followerEmail, followeeEmail);
+    public Following insertFollowing(String followerEmail, Long userId) {
+        Following following = createFollowing(followerEmail, userId);
         return followingDao.save(following);
     }
 
@@ -31,12 +30,12 @@ public class FollowingService {
         return followingResDao.findByFollowerId(getUserById(followerId).getId(), pageable);
     }
 
-    private User getUserById(Long followerId) {
-        return userDao.findById(followerId).orElseThrow(() -> new IllegalArgumentException());
+    public Page<FollowingResponse> getFollowers(Long followeeId, Pageable pageable) {
+        return followingResDao.findByFolloweeId(getUserById(followeeId).getId(), pageable);
     }
 
-    public List<Following> getFollowers(Long followeeId) {
-        return followingDao.findByFolloweeId(getUserById(followeeId).getId());
+    private User getUserById(Long followerId) {
+        return userDao.findById(followerId).orElseThrow(() -> new IllegalArgumentException());
     }
 
     @Transactional
@@ -54,9 +53,9 @@ public class FollowingService {
         return userDao.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException());
     }
 
-    private Following createFollowing(String followerEmail, String followeeEmail) {
+    private Following createFollowing(String followerEmail, Long userId) {
         User follower = getUser(followerEmail);
-        User followee = getUser(followeeEmail);
+        User followee = getUserById(userId);
 
         return Following.builder().follower(follower).followee(followee).build();
     }

@@ -23,7 +23,7 @@ public class FollowingResDao {
         QFollowing following = QFollowing.following;
         QProfile profile = QProfile.profile;
 
-        List<FollowingResponse> followingResult = queryFactory
+        List<FollowingResponse> followingInfo = queryFactory
                 .select(Projections.constructor(FollowingResponse.class, following.id, following.followee.id)
                 ).from(following)
                 .where(following.follower.id.eq(followerId))
@@ -31,8 +31,8 @@ public class FollowingResDao {
                 .offset(pageable.getOffset())
                 .fetch();
 
-        Map<Long, Long> followMap = followingResult.stream()
-                .collect(Collectors.toMap(FollowingResponse::getFolloweeId, FollowingResponse::getFollowingId));
+        Map<Long, Long> followMap = followingInfo.stream()
+                .collect(Collectors.toMap(FollowingResponse::getFollowUserId, FollowingResponse::getFollowingId));
 
         List<FollowingResponse> result = queryFactory
                 .select(Projections.constructor(FollowingResponse.class, profile.user.id, profile.imageUrl,
@@ -42,13 +42,44 @@ public class FollowingResDao {
                 .where(profile.user.id.in(followMap.keySet()))
                 .fetch();
         result.stream().forEach(e -> {
-                    Long followingId = followMap.get(e.getFolloweeId());
+                    Long followingId = followMap.get(e.getFollowUserId());
                     e.setFollowingId(followingId);
                 }
         );
         Long count = searchFroCount(followerId);
         return new PageImpl<>(result, pageable, count);
 
+    }
+
+    public Page<FollowingResponse> findByFolloweeId(Long followeeId, Pageable pageable) {
+        QFollowing following = QFollowing.following;
+        QProfile profile = QProfile.profile;
+
+        List<FollowingResponse> followingInfo = queryFactory
+                .select(Projections.constructor(FollowingResponse.class, following.id, following.follower.id)
+                ).from(following)
+                .where(following.followee.id.eq(followeeId))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        Map<Long, Long> followMap = followingInfo.stream()
+                .collect(Collectors.toMap(FollowingResponse::getFollowUserId, FollowingResponse::getFollowingId));
+
+        List<FollowingResponse> result = queryFactory
+                .select(Projections.constructor(FollowingResponse.class, profile.user.id, profile.imageUrl,
+                        profile.userName)
+                )
+                .from(profile)
+                .where(profile.user.id.in(followMap.keySet()))
+                .fetch();
+        result.stream().forEach(e -> {
+                    Long followingId = followMap.get(e.getFollowUserId());
+                    e.setFollowingId(followingId);
+                }
+        );
+        Long count = searchFroCount(followeeId);
+        return new PageImpl<>(result, pageable, count);
     }
 
     public Long searchFroCount(Long followerId) {
