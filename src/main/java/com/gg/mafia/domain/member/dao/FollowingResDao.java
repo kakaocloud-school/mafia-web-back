@@ -2,8 +2,8 @@ package com.gg.mafia.domain.member.dao;
 
 import com.gg.mafia.domain.member.domain.QFollowing;
 import com.gg.mafia.domain.member.dto.FollowingResponse;
-import com.gg.mafia.domain.member.dto.QFollowingResponse;
 import com.gg.mafia.domain.profile.domain.QProfile;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +24,7 @@ public class FollowingResDao {
         QProfile profile = QProfile.profile;
 
         List<FollowingResponse> followingResult = queryFactory
-                .select(new QFollowingResponse(
-                                following.id, following.followee.id
-                        )
+                .select(Projections.constructor(FollowingResponse.class, following.id, following.followee.id)
                 ).from(following)
                 .where(following.follower.id.eq(followerId))
                 .limit(pageable.getPageSize())
@@ -37,11 +35,9 @@ public class FollowingResDao {
                 .collect(Collectors.toMap(FollowingResponse::getFolloweeId, FollowingResponse::getFollowingId));
 
         List<FollowingResponse> result = queryFactory
-                .select(new QFollowingResponse(
-                        profile.user.id,
-                        profile.imageUrl,
-                        profile.userName
-                ))
+                .select(Projections.constructor(FollowingResponse.class, profile.user.id, profile.imageUrl,
+                        profile.userName)
+                )
                 .from(profile)
                 .where(profile.user.id.in(followMap.keySet()))
                 .fetch();
