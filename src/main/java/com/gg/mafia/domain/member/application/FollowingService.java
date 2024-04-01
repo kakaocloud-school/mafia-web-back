@@ -39,9 +39,9 @@ public class FollowingService {
     }
 
     @Transactional
-    public void removeFollowee(String followerEmail, String followeeEmail) {
+    public void removeFollowee(String followerEmail, Long userId) {
         Long followerId = getUser(followerEmail).getId();
-        Long followeeId = getUser(followeeEmail).getId();
+        Long followeeId = getUserById(userId).getId();
 
         Following following = followingDao.findByFollowerIdAndFolloweeId(followerId, followeeId)
                 .orElseThrow(() -> new IllegalArgumentException());

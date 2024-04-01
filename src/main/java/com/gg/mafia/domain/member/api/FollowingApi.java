@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,9 +42,9 @@ public class FollowingApi {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/follow")
-    public ResponseEntity<ApiResponse<Void>> removeFollow(Principal principal, @RequestBody String followeeEmail) {
-        followingService.removeFollowee(principal.getName(), followeeEmail);
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<Void>> removeFollow(Principal principal, @PathVariable Long userId) {
+        followingService.removeFollowee(principal.getName(), userId);
         return ResponseEntity.ok().build();
     }
 }
