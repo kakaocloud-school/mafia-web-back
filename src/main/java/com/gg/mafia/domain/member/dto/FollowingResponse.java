@@ -9,36 +9,36 @@ import lombok.NoArgsConstructor;
 public class FollowingResponse {
     private Long followingId;
     private String imageUrl;
-    private Long followeeId;
-    private String followeeNickname;
+    private Long followUserId;
+    private String followUserNickname;
 
     @QueryProjection
     public FollowingResponse(
-            Long followeeId,
+            Long followUserId,
             String imageUrl,
-            String followeeNickname
+            String followUserNickname
     ) {
-        this.followeeId = followeeId;
+        this.followUserId = followUserId;
         this.imageUrl = imageUrl;
-        this.followeeNickname = followeeNickname;
+        this.followUserNickname = followUserNickname;
     }
 
     @QueryProjection
     public FollowingResponse(
             String imageUrl,
-            String followeeNickname
+            String followUserNickname
     ) {
         this.imageUrl = imageUrl;
-        this.followeeNickname = followeeNickname;
+        this.followUserNickname = followUserNickname;
     }
 
     @QueryProjection
     public FollowingResponse(
             Long followingId,
-            Long followeeId
+            Long followUserId
     ) {
         this.followingId = followingId;
-        this.followeeId = followeeId;
+        this.followUserId = followUserId;
     }
 
 }
