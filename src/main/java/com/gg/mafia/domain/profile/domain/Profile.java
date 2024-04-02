@@ -18,11 +18,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
+@ToString(of = {"userName", "description"})
 public class Profile extends BaseEntity {
     @Column(nullable = false)
     private String description = "안녕하세요";

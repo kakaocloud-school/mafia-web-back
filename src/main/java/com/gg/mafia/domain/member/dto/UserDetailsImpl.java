@@ -14,4 +14,8 @@ public class UserDetailsImpl extends User {
         super(username, password, authorities);
         this.id = id;
     }
+
+    public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        super(username, password, authorities);
+    }
 }

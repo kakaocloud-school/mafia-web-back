@@ -17,11 +17,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
+@ToString(of = {"email"})
 public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;

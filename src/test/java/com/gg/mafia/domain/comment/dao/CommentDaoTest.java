@@ -1,6 +1,7 @@
 package com.gg.mafia.domain.comment.dao;
 
 import com.gg.mafia.domain.comment.domain.Comment;
+import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.profile.dao.ProfileDao;
 import com.gg.mafia.domain.profile.domain.Profile;
@@ -34,6 +35,8 @@ class CommentDaoTest {
     EntityManager em;
     @Autowired
     CommentDao commentDao;
+    @Autowired
+    UserDao userDao;
     @Autowired
     ProfileDao profileDao;
     User user;
