@@ -2,12 +2,15 @@ package com.gg.mafia.domain.comment.application;
 
 import com.gg.mafia.domain.comment.dao.CommentDao;
 import com.gg.mafia.domain.comment.domain.Comment;
+import com.gg.mafia.domain.comment.dto.CommentResponse;
 import com.gg.mafia.domain.member.dao.UserDao;
 import com.gg.mafia.domain.member.domain.User;
 import com.gg.mafia.domain.profile.dao.ProfileDao;
 import com.gg.mafia.domain.profile.domain.Profile;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +22,8 @@ public class CommentService {
     private final UserDao userDao;
 
     @Transactional
-    public List<Comment> selectCommentByProfileId(Long profileId) {
-        return commentDao.findByProfileId(profileId);
+    public Page<CommentResponse> selectComments(Long profileId, Pageable pageable) {
+        return commentDao.findComments(profileId, pageable);
     }
 
     @Transactional
