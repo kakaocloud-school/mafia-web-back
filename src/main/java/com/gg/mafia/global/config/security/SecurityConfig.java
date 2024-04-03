@@ -60,9 +60,11 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/member/send-mail"),
                 new AntPathRequestMatcher("/member/confirm-mail"),
                 new AntPathRequestMatcher("/member/oauth-types/**/validate-oauth2-code"),
+                // TODO: "/member/ranks/**", "/member/users/**" -> community 로
                 new AntPathRequestMatcher("/member/ranks/**", HttpMethod.GET.name()),
                 new AntPathRequestMatcher("/member/users/**", HttpMethod.GET.name()),
                 new AntPathRequestMatcher("/profile/**"),
+                new AntPathRequestMatcher("/community/**", HttpMethod.GET.name()),
                 new AntPathRequestMatcher("/record/**", HttpMethod.GET.name()),
         };
         builder.authorizeHttpRequests(authorizeHttpRequests ->
