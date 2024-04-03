@@ -71,7 +71,7 @@ public class Profile extends BaseEntity {
 
     private void setUser(User user) {
         if (this.user != null) {
-            user.setProfile(null);
+            this.user.setProfile(null);
         }
         this.user = user;
         user.setProfile(this);

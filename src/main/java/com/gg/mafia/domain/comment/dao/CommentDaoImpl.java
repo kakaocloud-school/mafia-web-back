@@ -18,29 +18,20 @@ public class CommentDaoImpl implements CommentDaoCustom {
 
     @Override
     public Page<CommentResponse> findComments(Long profileId, Pageable pageable) {
-        QProfile profile = QProfile.profile;
         QProfile subProfile = new QProfile("subProfile");
         QComment comment = QComment.comment;
 
-//        List<Tuple> fetch = queryFactory
-//                .select(comment,
-//                        JPAExpressions
-//                                .select(subProfile.userName)
-//                                .from(subProfile)
-//                                .where(subProfile.user.id.eq(comment.user.id))
-//                )
-//                .from(comment)
-//                .join(comment.profile, profile)
-//                .where(comment.profile.id.eq(profileId)).fetch();
         List<CommentResponse> result = queryFactory
-                .select(new QCommentResponse(JPAExpressions
-                        .select(subProfile.userName)
-                        .from(subProfile)
-                        .where(subProfile.user.id.eq(comment.user.id))
-                        , comment)
+                .select(new QCommentResponse(
+                                JPAExpressions
+                                        .select(subProfile.userName)
+                                        .from(subProfile)
+                                        .where(subProfile.user.id.eq(comment.user.id)), comment
+                        )
                 )
                 .from(comment)
-                .join(comment.profile, profile)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .where(comment.profile.id.eq(profileId)).fetch();
 
         long count = searchCount(profileId);
